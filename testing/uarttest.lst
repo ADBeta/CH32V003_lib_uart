@@ -5,275 +5,206 @@ uarttest.elf:     file format elf32-littleriscv
 Disassembly of section .init:
 
 00000000 <InterruptVector>:
-   0:	0ac0006f          	j	ac <handle_reset>
+   0:	0a00006f          	j	a0 <_einit>
    4:	00000000          	.word	0x00000000
-   8:	00000128          	.word	0x00000128
-   c:	00000126          	.word	0x00000126
+   8:	0000011c          	.word	0x0000011c
+   c:	0000011a          	.word	0x0000011a
 	...
-  30:	00000126          	.word	0x00000126
+  30:	0000011a          	.word	0x0000011a
   34:	00000000          	.word	0x00000000
-  38:	00000126          	.word	0x00000126
+  38:	0000011a          	.word	0x0000011a
   3c:	00000000          	.word	0x00000000
-  40:	00000126          	.word	0x00000126
-  44:	00000126          	.word	0x00000126
-  48:	00000126          	.word	0x00000126
-  4c:	00000126          	.word	0x00000126
-  50:	00000126          	.word	0x00000126
-  54:	00000126          	.word	0x00000126
-  58:	00000126          	.word	0x00000126
-  5c:	00000126          	.word	0x00000126
-  60:	00000126          	.word	0x00000126
-  64:	00000126          	.word	0x00000126
-  68:	00000126          	.word	0x00000126
-  6c:	00000126          	.word	0x00000126
-  70:	00000126          	.word	0x00000126
-  74:	00000126          	.word	0x00000126
-  78:	00000126          	.word	0x00000126
-  7c:	00000126          	.word	0x00000126
-  80:	00000126          	.word	0x00000126
-  84:	00000126          	.word	0x00000126
-  88:	00000126          	.word	0x00000126
-  8c:	00000126          	.word	0x00000126
-  90:	00000126          	.word	0x00000126
-  94:	00000126          	.word	0x00000126
-  98:	00000126          	.word	0x00000126
+  40:	0000011a          	.word	0x0000011a
+  44:	0000011a          	.word	0x0000011a
+  48:	0000011a          	.word	0x0000011a
+  4c:	0000011a          	.word	0x0000011a
+  50:	0000011a          	.word	0x0000011a
+  54:	0000011a          	.word	0x0000011a
+  58:	0000011a          	.word	0x0000011a
+  5c:	0000011a          	.word	0x0000011a
+  60:	0000011a          	.word	0x0000011a
+  64:	0000011a          	.word	0x0000011a
+  68:	0000011a          	.word	0x0000011a
+  6c:	0000011a          	.word	0x0000011a
+  70:	0000011a          	.word	0x0000011a
+  74:	0000011a          	.word	0x0000011a
+  78:	0000011a          	.word	0x0000011a
+  7c:	0000011a          	.word	0x0000011a
+  80:	0000011a          	.word	0x0000011a
+  84:	0000011a          	.word	0x0000011a
+  88:	0000011a          	.word	0x0000011a
+  8c:	0000011a          	.word	0x0000011a
+  90:	0000011a          	.word	0x0000011a
+  94:	0000011a          	.word	0x0000011a
+  98:	0000011a          	.word	0x0000011a
   9c:	0000                	.insn	2, 0x
 	...
 
 Disassembly of section .text:
 
-000000a0 <internal_handle_input.constprop.0>:
-  a0:	e00007b7          	lui	a5,0xe0000
-  a4:	0f478793          	addi	a5,a5,244 # e00000f4 <_eusrstack+0xbffff8f4>
-  a8:	439c                	lw	a5,0(a5)
-  aa:	8082                	ret
+000000a0 <handle_reset>:
+  a0:	20000197          	auipc	gp,0x20000
+  a4:	76018193          	addi	gp,gp,1888 # 20000800 <_eusrstack>
+  a8:	00018113          	mv	sp,gp
+  ac:	08000513          	li	a0,128
+  b0:	30051073          	csrw	mstatus,a0
+  b4:	468d                	li	a3,3
+  b6:	00000517          	auipc	a0,0x0
+  ba:	f4a50513          	addi	a0,a0,-182 # 0 <InterruptVector>
+  be:	8d55                	or	a0,a0,a3
+  c0:	30551073          	csrw	mtvec,a0
+  c4:	20000517          	auipc	a0,0x20000
+  c8:	f3c50513          	addi	a0,a0,-196 # 20000000 <_data_vma>
+  cc:	20000597          	auipc	a1,0x20000
+  d0:	f3458593          	addi	a1,a1,-204 # 20000000 <_data_vma>
+  d4:	4601                	li	a2,0
+  d6:	00b55663          	bge	a0,a1,e2 <handle_reset+0x42>
+  da:	c110                	sw	a2,0(a0)
+  dc:	0511                	addi	a0,a0,4
+  de:	feb54ee3          	blt	a0,a1,da <handle_reset+0x3a>
+  e2:	23000513          	li	a0,560
+  e6:	20000597          	auipc	a1,0x20000
+  ea:	f1a58593          	addi	a1,a1,-230 # 20000000 <_data_vma>
+  ee:	20000617          	auipc	a2,0x20000
+  f2:	f1260613          	addi	a2,a2,-238 # 20000000 <_data_vma>
+  f6:	00c58863          	beq	a1,a2,106 <handle_reset+0x66>
+  fa:	4114                	lw	a3,0(a0)
+  fc:	c194                	sw	a3,0(a1)
+  fe:	0511                	addi	a0,a0,4
+ 100:	0591                	addi	a1,a1,4
+ 102:	fec59ae3          	bne	a1,a2,f6 <handle_reset+0x56>
+ 106:	e000f7b7          	lui	a5,0xe000f
+ 10a:	4715                	li	a4,5
+ 10c:	c398                	sw	a4,0(a5)
+ 10e:	18c00793          	li	a5,396
+ 112:	34179073          	csrw	mepc,a5
+ 116:	30200073          	mret
 
-000000ac <handle_reset>:
-  ac:	20000197          	auipc	gp,0x20000
-  b0:	75418193          	addi	gp,gp,1876 # 20000800 <_eusrstack>
-  b4:	00018113          	mv	sp,gp
-  b8:	08000513          	li	a0,128
-  bc:	30051073          	csrw	mstatus,a0
-  c0:	468d                	li	a3,3
-  c2:	00000517          	auipc	a0,0x0
-  c6:	f3e50513          	addi	a0,a0,-194 # 0 <InterruptVector>
-  ca:	8d55                	or	a0,a0,a3
-  cc:	30551073          	csrw	mtvec,a0
-  d0:	20000517          	auipc	a0,0x20000
-  d4:	f3050513          	addi	a0,a0,-208 # 20000000 <_data_vma>
-  d8:	20000597          	auipc	a1,0x20000
-  dc:	f2858593          	addi	a1,a1,-216 # 20000000 <_data_vma>
-  e0:	4601                	li	a2,0
-  e2:	00b55663          	bge	a0,a1,ee <handle_reset+0x42>
-  e6:	c110                	sw	a2,0(a0)
-  e8:	0511                	addi	a0,a0,4
-  ea:	feb54ee3          	blt	a0,a1,e6 <handle_reset+0x3a>
-  ee:	2a000513          	li	a0,672
-  f2:	20000597          	auipc	a1,0x20000
-  f6:	f0e58593          	addi	a1,a1,-242 # 20000000 <_data_vma>
-  fa:	20000617          	auipc	a2,0x20000
-  fe:	f0660613          	addi	a2,a2,-250 # 20000000 <_data_vma>
- 102:	00c58863          	beq	a1,a2,112 <handle_reset+0x66>
- 106:	4114                	lw	a3,0(a0)
- 108:	c194                	sw	a3,0(a1)
- 10a:	0511                	addi	a0,a0,4
- 10c:	0591                	addi	a1,a1,4
- 10e:	fec59ae3          	bne	a1,a2,102 <handle_reset+0x56>
- 112:	e000f7b7          	lui	a5,0xe000f
- 116:	4715                	li	a4,5
- 118:	c398                	sw	a4,0(a5)
- 11a:	1e800793          	li	a5,488
- 11e:	34179073          	csrw	mepc,a5
- 122:	30200073          	mret
+0000011a <ADC1_IRQHandler>:
+ 11a:	a001                	j	11a <ADC1_IRQHandler>
 
-00000126 <ADC1_IRQHandler>:
- 126:	a001                	j	126 <ADC1_IRQHandler>
+0000011c <NMI_Handler>:
+ 11c:	40021737          	lui	a4,0x40021
+ 120:	471c                	lw	a5,8(a4)
+ 122:	008006b7          	lui	a3,0x800
+ 126:	8fd5                	or	a5,a5,a3
+ 128:	c71c                	sw	a5,8(a4)
 
-00000128 <NMI_Handler>:
- 128:	40021737          	lui	a4,0x40021
- 12c:	471c                	lw	a5,8(a4)
- 12e:	008006b7          	lui	a3,0x800
- 132:	8fd5                	or	a5,a5,a3
- 134:	c71c                	sw	a5,8(a4)
+0000012a <SystemInit>:
+ 12a:	400227b7          	lui	a5,0x40022
+ 12e:	4705                	li	a4,1
+ 130:	c398                	sw	a4,0(a5)
+ 132:	400217b7          	lui	a5,0x40021
+ 136:	01080737          	lui	a4,0x1080
+ 13a:	0007a223          	sw	zero,4(a5) # 40021004 <_eusrstack+0x20020804>
+ 13e:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.a9ea5ae4+0x107dfa4>
+ 142:	c398                	sw	a4,0(a5)
+ 144:	009f0737          	lui	a4,0x9f0
+ 148:	c798                	sw	a4,8(a5)
+ 14a:	40021737          	lui	a4,0x40021
+ 14e:	431c                	lw	a5,0(a4)
+ 150:	00679693          	slli	a3,a5,0x6
+ 154:	fe06dde3          	bgez	a3,14e <SystemInit+0x24>
+ 158:	435c                	lw	a5,4(a4)
+ 15a:	400216b7          	lui	a3,0x40021
+ 15e:	9bf1                	andi	a5,a5,-4
+ 160:	0027e793          	ori	a5,a5,2
+ 164:	c35c                	sw	a5,4(a4)
+ 166:	4721                	li	a4,8
+ 168:	42dc                	lw	a5,4(a3)
+ 16a:	8bb1                	andi	a5,a5,12
+ 16c:	fee79ee3          	bne	a5,a4,168 <SystemInit+0x3e>
+ 170:	e00007b7          	lui	a5,0xe0000
+ 174:	0f878793          	addi	a5,a5,248 # e00000f8 <_eusrstack+0xbffff8f8>
+ 178:	0007a023          	sw	zero,0(a5)
+ 17c:	e00007b7          	lui	a5,0xe0000
+ 180:	0f478793          	addi	a5,a5,244 # e00000f4 <_eusrstack+0xbffff8f4>
+ 184:	08000713          	li	a4,128
+ 188:	c398                	sw	a4,0(a5)
+ 18a:	8082                	ret
 
-00000136 <putchar>:
- 136:	1151                	addi	sp,sp,-12
- 138:	000277b7          	lui	a5,0x27
- 13c:	e0000737          	lui	a4,0xe0000
- 140:	c222                	sw	s0,4(sp)
- 142:	c406                	sw	ra,8(sp)
- 144:	842a                	mv	s0,a0
- 146:	10178793          	addi	a5,a5,257 # 27101 <lib_gpioctrl.c.4c08c933+0x24f55>
- 14a:	0f470713          	addi	a4,a4,244 # e00000f4 <_eusrstack+0xbffff8f4>
- 14e:	4314                	lw	a3,0(a4)
- 150:	0806f613          	andi	a2,a3,128
- 154:	e60d                	bnez	a2,17e <putchar+0x48>
- 156:	c291                	beqz	a3,15a <putchar+0x24>
- 158:	37a1                	jal	a0 <internal_handle_input.constprop.0>
- 15a:	6741                	lui	a4,0x10
- 15c:	f0070713          	addi	a4,a4,-256 # ff00 <lib_gpioctrl.c.4c08c933+0xdd54>
- 160:	00841793          	slli	a5,s0,0x8
- 164:	8ff9                	and	a5,a5,a4
- 166:	e0000737          	lui	a4,0xe0000
- 16a:	0857e793          	ori	a5,a5,133
- 16e:	0f470713          	addi	a4,a4,244 # e00000f4 <_eusrstack+0xbffff8f4>
- 172:	c31c                	sw	a5,0(a4)
- 174:	4505                	li	a0,1
- 176:	40a2                	lw	ra,8(sp)
- 178:	4412                	lw	s0,4(sp)
- 17a:	0131                	addi	sp,sp,12
- 17c:	8082                	ret
- 17e:	17fd                	addi	a5,a5,-1
- 180:	f7f9                	bnez	a5,14e <putchar+0x18>
- 182:	4501                	li	a0,0
- 184:	bfcd                	j	176 <putchar+0x40>
+0000018c <main>:
+}
 
-00000186 <SystemInit>:
- 186:	400227b7          	lui	a5,0x40022
- 18a:	4705                	li	a4,1
- 18c:	c398                	sw	a4,0(a5)
- 18e:	400217b7          	lui	a5,0x40021
- 192:	01080737          	lui	a4,0x1080
- 196:	0007a223          	sw	zero,4(a5) # 40021004 <_eusrstack+0x20020804>
- 19a:	08170713          	addi	a4,a4,129 # 1080081 <lib_gpioctrl.c.4c08c933+0x107ded5>
- 19e:	c398                	sw	a4,0(a5)
- 1a0:	009f0737          	lui	a4,0x9f0
- 1a4:	c798                	sw	a4,8(a5)
- 1a6:	40021737          	lui	a4,0x40021
- 1aa:	431c                	lw	a5,0(a4)
- 1ac:	00679693          	slli	a3,a5,0x6
- 1b0:	fe06dde3          	bgez	a3,1aa <SystemInit+0x24>
- 1b4:	435c                	lw	a5,4(a4)
- 1b6:	400216b7          	lui	a3,0x40021
- 1ba:	9bf1                	andi	a5,a5,-4
- 1bc:	0027e793          	ori	a5,a5,2
- 1c0:	c35c                	sw	a5,4(a4)
- 1c2:	4721                	li	a4,8
- 1c4:	42dc                	lw	a5,4(a3)
- 1c6:	8bb1                	andi	a5,a5,12
- 1c8:	fee79ee3          	bne	a5,a4,1c4 <SystemInit+0x3e>
- 1cc:	e00007b7          	lui	a5,0xe0000
- 1d0:	0f878793          	addi	a5,a5,248 # e00000f8 <_eusrstack+0xbffff8f8>
- 1d4:	0007a023          	sw	zero,0(a5)
- 1d8:	e00007b7          	lui	a5,0xe0000
- 1dc:	0f478793          	addi	a5,a5,244 # e00000f4 <_eusrstack+0xbffff8f4>
- 1e0:	08000713          	li	a4,128
- 1e4:	c398                	sw	a4,0(a5)
- 1e6:	8082                	ret
-
-000001e8 <main>:
-	UART_BAUD_1200   = 0x9C40,    // 1200
-} UART_BAUDRATE_DEF;
 
 
 int main()
 {
- 1e8:	1151                	addi	sp,sp,-12
- 1ea:	c222                	sw	s0,4(sp)
- 1ec:	c406                	sw	ra,8(sp)
- 1ee:	c026                	sw	s1,0(sp)
+ 18c:	1151                	addi	sp,sp,-12
+ 18e:	c406                	sw	ra,8(sp)
 	SystemInit();
- 1f0:	3f59                	jal	186 <SystemInit>
-	
-	// Enable GPIOD and UART.
+ 190:	3f69                	jal	12a <SystemInit>
 	RCC->APB2PCENR |= RCC_APB2Periph_GPIOD | RCC_APB2Periph_USART1;
- 1f2:	40021737          	lui	a4,0x40021
- 1f6:	4f1c                	lw	a5,24(a4)
- 1f8:	6691                	lui	a3,0x4
- 1fa:	02068693          	addi	a3,a3,32 # 4020 <lib_gpioctrl.c.4c08c933+0x1e74>
- 1fe:	8fd5                	or	a5,a5,a3
- 200:	cf1c                	sw	a5,24(a4)
-	
-	// Make array of uint8_t from [pin] enum. See definition for details
-	uint8_t *byte = (uint8_t *)&pin;
-	
-	// Set the RCC Register to enable clock on the specified port
-	GPIO_RCC->APB2PCENR |= (RCC_APB2PCENR_AFIO | (RCC_APB2PCENR_IOPxEN << byte[0]));
- 202:	4f1c                	lw	a5,24(a4)
-
-	// Clear then set the GPIO Config Register
-	GPIO_PORT_MAP[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 204:	ff100637          	lui	a2,0xff100
- 208:	167d                	addi	a2,a2,-1 # ff0fffff <_eusrstack+0xdf0ff7ff>
-	GPIO_RCC->APB2PCENR |= (RCC_APB2PCENR_AFIO | (RCC_APB2PCENR_IOPxEN << byte[0]));
- 20a:	0217e793          	ori	a5,a5,33
- 20e:	cf1c                	sw	a5,24(a4)
-	GPIO_PORT_MAP[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 210:	400117b7          	lui	a5,0x40011
- 214:	40078793          	addi	a5,a5,1024 # 40011400 <_eusrstack+0x20010c00>
- 218:	4394                	lw	a3,0(a5)
-	// Push-Pull, 10MHz Output, GPIO D5, with AutoFunction
-	gpio_set_mode(GPIO_PD5, OUTPUT_10MHZ_PP | OUTPUT_PP_AF);
-	gpio_set_mode(GPIO_PD6, INPUT_FLOATING);
-
-	// 115200, 8n1.  Note if you don't specify a mode, UART remains off even when UE_Set.
-	USART1->CTLR1 = USART_WordLength_8b | USART_Parity_No | USART_Mode_Tx | USART_Mode_Rx;
- 21a:	40014437          	lui	s0,0x40014
- 21e:	80040413          	addi	s0,s0,-2048 # 40013800 <_eusrstack+0x20013000>
- 222:	8ef1                	and	a3,a3,a2
- 224:	c394                	sw	a3,0(a5)
-	GPIO_PORT_MAP[ byte[0] ]->CFGLR |=  (mode & 0x0F) << (4 * byte[1]);
- 226:	4394                	lw	a3,0(a5)
- 228:	00900637          	lui	a2,0x900
- 22c:	8ed1                	or	a3,a3,a2
- 22e:	c394                	sw	a3,0(a5)
-	GPIO_RCC->APB2PCENR |= (RCC_APB2PCENR_AFIO | (RCC_APB2PCENR_IOPxEN << byte[0]));
- 230:	4f14                	lw	a3,24(a4)
- 232:	0216e693          	ori	a3,a3,33
- 236:	cf14                	sw	a3,24(a4)
-	GPIO_PORT_MAP[ byte[0] ]->CFGLR &=        ~(0x0F  << (4 * byte[1]));
- 238:	4398                	lw	a4,0(a5)
- 23a:	f10006b7          	lui	a3,0xf1000
- 23e:	16fd                	addi	a3,a3,-1 # f0ffffff <_eusrstack+0xd0fff7ff>
- 240:	8f75                	and	a4,a4,a3
- 242:	c398                	sw	a4,0(a5)
-	GPIO_PORT_MAP[ byte[0] ]->CFGLR |=  (mode & 0x0F) << (4 * byte[1]);
- 244:	4398                	lw	a4,0(a5)
- 246:	040006b7          	lui	a3,0x4000
- 24a:	8f55                	or	a4,a4,a3
- 24c:	c398                	sw	a4,0(a5)
- 24e:	47b1                	li	a5,12
- 250:	00f41623          	sh	a5,12(s0)
-	USART1->CTLR2 = USART_StopBits_1;
- 254:	00041823          	sh	zero,16(s0)
-	USART1->CTLR3 = 0x00;
-
-	USART1->BRR = UART_BAUD_1200;
- 258:	77e9                	lui	a5,0xffffa
-	USART1->CTLR3 = 0x00;
- 25a:	00041a23          	sh	zero,20(s0)
-	USART1->BRR = UART_BAUD_1200;
- 25e:	c4078793          	addi	a5,a5,-960 # ffff9c40 <_eusrstack+0xdfff9440>
- 262:	00f41423          	sh	a5,8(s0)
+ 192:	400216b7          	lui	a3,0x40021
+ 196:	4e9c                	lw	a5,24(a3)
+ 198:	6711                	lui	a4,0x4
+ 19a:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.a9ea5ae4+0x1f43>
+ 19e:	8fd9                	or	a5,a5,a4
+ 1a0:	ce9c                	sw	a5,24(a3)
+	GPIOD->CFGLR &= ~((0x0F << (4*6)) | (0x0F << (4*5)));  // Clear PD6 & PD5
+ 1a2:	400117b7          	lui	a5,0x40011
+ 1a6:	40078793          	addi	a5,a5,1024 # 40011400 <_eusrstack+0x20010c00>
+ 1aa:	4398                	lw	a4,0(a5)
+ 1ac:	f01006b7          	lui	a3,0xf0100
+ 1b0:	16fd                	addi	a3,a3,-1 # f00fffff <_eusrstack+0xd00ff7ff>
+ 1b2:	8f75                	and	a4,a4,a3
+ 1b4:	c398                	sw	a4,0(a5)
+	GPIOD->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4*5); // PD5 TX
+ 1b6:	4398                	lw	a4,0(a5)
+ 1b8:	009006b7          	lui	a3,0x900
+	while(len--)
+ 1bc:	45ad                	li	a1,11
+	GPIOD->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4*5); // PD5 TX
+ 1be:	8f55                	or	a4,a4,a3
+ 1c0:	c398                	sw	a4,0(a5)
+	GPIOD->CFGLR |= (GPIO_CNF_IN_FLOATING << (4*6));                  // PD6 RX
+ 1c2:	4398                	lw	a4,0(a5)
+ 1c4:	040006b7          	lui	a3,0x4000
+ 1c8:	8f55                	or	a4,a4,a3
+ 1ca:	c398                	sw	a4,0(a5)
+	USART1->CTLR1 = (uint16_t)0x0000 | wordlength | parity;
+ 1cc:	400147b7          	lui	a5,0x40014
+ 1d0:	80079623          	sh	zero,-2036(a5) # 4001380c <_eusrstack+0x2001300c>
+	USART1->CTLR1 |= USART_Mode_Tx | USART_Mode_Rx;
+ 1d4:	80c7d703          	lhu	a4,-2036(a5)
 	USART1->CTLR1 |= CTLR1_UE_Set;
- 266:	00c45783          	lhu	a5,12(s0)
- 26a:	6709                	lui	a4,0x2
- 26c:	8fd9                	or	a5,a5,a4
- 26e:	00f41623          	sh	a5,12(s0)
-
-
-	while(1)
-	{
-		if( (USART1->STATR & USART_FLAG_RXNE) != 0)
- 272:	00045783          	lhu	a5,0(s0)
- 276:	0207f793          	andi	a5,a5,32
- 27a:	dfe5                	beqz	a5,272 <main+0x8a>
-		{
-			char c = (char)USART1->DATAR;
- 27c:	00445503          	lhu	a0,4(s0)
- 280:	01051493          	slli	s1,a0,0x10
-			printf("%c", c);
- 284:	0ff57513          	zext.b	a0,a0
-			char c = (char)USART1->DATAR;
- 288:	80c1                	srli	s1,s1,0x10
-			printf("%c", c);
- 28a:	3575                	jal	136 <putchar>
-
-			while( !(USART1->STATR & USART_FLAG_TC));
- 28c:	00045783          	lhu	a5,0(s0)
- 290:	0407f793          	andi	a5,a5,64
- 294:	dfe5                	beqz	a5,28c <main+0xa4>
-	    	USART1->DATAR = c;
- 296:	0ff4f493          	zext.b	s1,s1
- 29a:	00941223          	sh	s1,4(s0)
- 29e:	bfd1                	j	272 <main+0x8a>
+ 1d8:	6689                	lui	a3,0x2
+	USART1->CTLR1 = (uint16_t)0x0000 | wordlength | parity;
+ 1da:	80078793          	addi	a5,a5,-2048
+	USART1->CTLR1 |= USART_Mode_Tx | USART_Mode_Rx;
+ 1de:	00c76713          	ori	a4,a4,12
+ 1e2:	00e79623          	sh	a4,12(a5)
+	USART1->CTLR2 = (uint16_t)0x0000 | stopbits;
+ 1e6:	00079823          	sh	zero,16(a5)
+	USART1->CTLR3 = (uint16_t)0x0000;
+ 1ea:	00079a23          	sh	zero,20(a5)
+	USART1->BRR = baud;
+ 1ee:	1a100713          	li	a4,417
+ 1f2:	00e79423          	sh	a4,8(a5)
+	USART1->CTLR1 |= CTLR1_UE_Set;
+ 1f6:	00c7d703          	lhu	a4,12(a5)
+ 1fa:	8f55                	or	a4,a4,a3
+ 1fc:	00e79623          	sh	a4,12(a5)
+		USART1->DATAR = *string++;
+ 200:	22400693          	li	a3,548
+{
+ 204:	4701                	li	a4,0
+		while(!(USART1->STATR & USART_FLAG_TC));
+ 206:	0007d603          	lhu	a2,0(a5)
+ 20a:	04067613          	andi	a2,a2,64
+ 20e:	de65                	beqz	a2,206 <main+0x7a>
+		USART1->DATAR = *string++;
+ 210:	00d70633          	add	a2,a4,a3
+ 214:	00064603          	lbu	a2,0(a2)
+	while(len--)
+ 218:	0705                	addi	a4,a4,1
+		USART1->DATAR = *string++;
+ 21a:	00c79223          	sh	a2,4(a5)
+	while(len--)
+ 21e:	feb714e3          	bne	a4,a1,206 <main+0x7a>
+ 222:	b7cd                	j	204 <main+0x78>
+ 224:	6548                	.insn	2, 0x6548
+ 226:	6c6c                	.insn	2, 0x6c6c
+ 228:	6f77206f          	j	7311e <lib_uart.c.a9ea5ae4+0x71041>
+ 22c:	6c72                	.insn	2, 0x6c72
+ 22e:	0064                	addi	s1,sp,12
