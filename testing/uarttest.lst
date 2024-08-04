@@ -30,7 +30,7 @@ Disassembly of section .init:
   74:	0000011a          	.word	0x0000011a
   78:	0000011a          	.word	0x0000011a
   7c:	0000011a          	.word	0x0000011a
-  80:	0000011a          	.word	0x0000011a
+  80:	00000208          	.word	0x00000208
   84:	0000011a          	.word	0x0000011a
   88:	0000011a          	.word	0x0000011a
   8c:	0000011a          	.word	0x0000011a
@@ -62,7 +62,7 @@ Disassembly of section .text:
   da:	c110                	sw	a2,0(a0)
   dc:	0511                	addi	a0,a0,4
   de:	feb54ee3          	blt	a0,a1,da <handle_reset+0x3a>
-  e2:	23000513          	li	a0,560
+  e2:	24800513          	li	a0,584
   e6:	20000597          	auipc	a1,0x20000
   ea:	f1a58593          	addi	a1,a1,-230 # 20000000 <_data_vma>
   ee:	20000617          	auipc	a2,0x20000
@@ -97,7 +97,7 @@ Disassembly of section .text:
  132:	400217b7          	lui	a5,0x40021
  136:	01080737          	lui	a4,0x1080
  13a:	0007a223          	sw	zero,4(a5) # 40021004 <_eusrstack+0x20020804>
- 13e:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.a9ea5ae4+0x107dfa4>
+ 13e:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.46a7ff67+0x107e05c>
  142:	c398                	sw	a4,0(a5)
  144:	009f0737          	lui	a4,0x9f0
  148:	c798                	sw	a4,8(a5)
@@ -124,8 +124,8 @@ Disassembly of section .text:
  18a:	8082                	ret
 
 0000018c <main>:
-}
 
+}
 
 
 int main()
@@ -134,13 +134,20 @@ int main()
  18e:	c406                	sw	ra,8(sp)
 	SystemInit();
  190:	3f69                	jal	12a <SystemInit>
+	const uart_wordlength_t wordlength,
+	const uart_parity_t parity, 
+	const uart_stopbits_t stopbits)
+{
+	// Enable GPIOD and UART1 Clock
 	RCC->APB2PCENR |= RCC_APB2Periph_GPIOD | RCC_APB2Periph_USART1;
  192:	400216b7          	lui	a3,0x40021
  196:	4e9c                	lw	a5,24(a3)
  198:	6711                	lui	a4,0x4
- 19a:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.a9ea5ae4+0x1f43>
+ 19a:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.46a7ff67+0x1ffb>
  19e:	8fd9                	or	a5,a5,a4
  1a0:	ce9c                	sw	a5,24(a3)
+
+	// Set the RX and TX Pins on PORTD. RX INPUT_FLOATING, TX 10MHz PP AF
 	GPIOD->CFGLR &= ~((0x0F << (4*6)) | (0x0F << (4*5)));  // Clear PD6 & PD5
  1a2:	400117b7          	lui	a5,0x40011
  1a6:	40078793          	addi	a5,a5,1024 # 40011400 <_eusrstack+0x20010c00>
@@ -152,59 +159,97 @@ int main()
 	GPIOD->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4*5); // PD5 TX
  1b6:	4398                	lw	a4,0(a5)
  1b8:	009006b7          	lui	a3,0x900
-	while(len--)
- 1bc:	45ad                	li	a1,11
-	GPIOD->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4*5); // PD5 TX
- 1be:	8f55                	or	a4,a4,a3
- 1c0:	c398                	sw	a4,0(a5)
+ 1bc:	8f55                	or	a4,a4,a3
+ 1be:	c398                	sw	a4,0(a5)
 	GPIOD->CFGLR |= (GPIO_CNF_IN_FLOATING << (4*6));                  // PD6 RX
- 1c2:	4398                	lw	a4,0(a5)
- 1c4:	040006b7          	lui	a3,0x4000
- 1c8:	8f55                	or	a4,a4,a3
- 1ca:	c398                	sw	a4,0(a5)
-	USART1->CTLR1 = (uint16_t)0x0000 | wordlength | parity;
- 1cc:	400147b7          	lui	a5,0x40014
- 1d0:	80079623          	sh	zero,-2036(a5) # 4001380c <_eusrstack+0x2001300c>
-	USART1->CTLR1 |= USART_Mode_Tx | USART_Mode_Rx;
- 1d4:	80c7d703          	lhu	a4,-2036(a5)
-	USART1->CTLR1 |= CTLR1_UE_Set;
- 1d8:	6689                	lui	a3,0x2
-	USART1->CTLR1 = (uint16_t)0x0000 | wordlength | parity;
- 1da:	80078793          	addi	a5,a5,-2048
-	USART1->CTLR1 |= USART_Mode_Tx | USART_Mode_Rx;
- 1de:	00c76713          	ori	a4,a4,12
- 1e2:	00e79623          	sh	a4,12(a5)
+ 1c0:	4398                	lw	a4,0(a5)
+ 1c2:	040006b7          	lui	a3,0x4000
+ 1c6:	8f55                	or	a4,a4,a3
+ 1c8:	c398                	sw	a4,0(a5)
+	
+	// Set CTLR1 Register (Enable RX & TX, set Word Length and Parity)
+	USART1->CTLR1 = (uint16_t)0x0000 | USART_Mode_Tx | USART_Mode_Rx |
+ 1ca:	400147b7          	lui	a5,0x40014
+ 1ce:	4731                	li	a4,12
+ 1d0:	80e79623          	sh	a4,-2036(a5) # 4001380c <_eusrstack+0x2001300c>
+		                               wordlength | parity;
+	// Set CTLR2 Register (Stopbits)
 	USART1->CTLR2 = (uint16_t)0x0000 | stopbits;
- 1e6:	00079823          	sh	zero,16(a5)
+ 1d4:	80079823          	sh	zero,-2032(a5)
+	// Set CTLR3 Register TODO: Interrupts and flow control
 	USART1->CTLR3 = (uint16_t)0x0000;
- 1ea:	00079a23          	sh	zero,20(a5)
+ 1d8:	80079a23          	sh	zero,-2028(a5)
+
+	// Set the Baudrate, assuming 48KHz
 	USART1->BRR = baud;
- 1ee:	1a100713          	li	a4,417
- 1f2:	00e79423          	sh	a4,8(a5)
+ 1dc:	1a100713          	li	a4,417
+ 1e0:	80e79423          	sh	a4,-2040(a5)
+
+	// Enable the UART
 	USART1->CTLR1 |= CTLR1_UE_Set;
- 1f6:	00c7d703          	lhu	a4,12(a5)
- 1fa:	8f55                	or	a4,a4,a3
- 1fc:	00e79623          	sh	a4,12(a5)
-		USART1->DATAR = *string++;
- 200:	22400693          	li	a3,548
+ 1e4:	80c7d703          	lhu	a4,-2036(a5)
+ 1e8:	6689                	lui	a3,0x2
+ 1ea:	8f55                	or	a4,a4,a3
+ 1ec:	80e79623          	sh	a4,-2036(a5)
+
+
+	// TODO:
+	USART1->CTLR1 |= USART_CTLR1_RXNEIE;
+ 1f0:	80c7d703          	lhu	a4,-2036(a5)
+ 1f4:	02076713          	ori	a4,a4,32
+ 1f8:	80e79623          	sh	a4,-2036(a5)
+ *
+ * @return  none
+ */
+RV_STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 {
- 204:	4701                	li	a4,0
+  NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+ 1fc:	e000e7b7          	lui	a5,0xe000e
+ 200:	4705                	li	a4,1
+ 202:	10e7a223          	sw	a4,260(a5) # e000e104 <_eusrstack+0xc000d904>
+		UART_STOPBITS_ONE
+	);
+
+
+
+	while(1)
+ 206:	a001                	j	206 <main+0x7a>
+
+00000208 <USART1_IRQHandler>:
+void USART1_IRQHandler(void) {
+ 208:	1151                	addi	sp,sp,-12
+ 20a:	c03e                	sw	a5,0(sp)
+	if(USART1->STATR & USART_FLAG_RXNE)
+ 20c:	400147b7          	lui	a5,0x40014
+ 210:	80078793          	addi	a5,a5,-2048 # 40013800 <_eusrstack+0x20013000>
+void USART1_IRQHandler(void) {
+ 214:	c23a                	sw	a4,4(sp)
+	if(USART1->STATR & USART_FLAG_RXNE)
+ 216:	0007d703          	lhu	a4,0(a5)
+void USART1_IRQHandler(void) {
+ 21a:	c436                	sw	a3,8(sp)
+	if(USART1->STATR & USART_FLAG_RXNE)
+ 21c:	02077713          	andi	a4,a4,32
+ 220:	cf11                	beqz	a4,23c <USART1_IRQHandler+0x34>
+		char recv = (char)USART1->DATAR;
+ 222:	0047d703          	lhu	a4,4(a5)
+ 226:	0742                	slli	a4,a4,0x10
+ 228:	8341                	srli	a4,a4,0x10
+	const uint8_t *bytes = (const uint8_t *)buffer;
+	// Send each byte
+	while(size--)
+	{
+		// Wait for the current transmission to finish
 		while(!(USART1->STATR & USART_FLAG_TC));
- 206:	0007d603          	lhu	a2,0(a5)
- 20a:	04067613          	andi	a2,a2,64
- 20e:	de65                	beqz	a2,206 <main+0x7a>
-		USART1->DATAR = *string++;
- 210:	00d70633          	add	a2,a4,a3
- 214:	00064603          	lbu	a2,0(a2)
-	while(len--)
- 218:	0705                	addi	a4,a4,1
-		USART1->DATAR = *string++;
- 21a:	00c79223          	sh	a2,4(a5)
-	while(len--)
- 21e:	feb714e3          	bne	a4,a1,206 <main+0x7a>
- 222:	b7cd                	j	204 <main+0x78>
- 224:	6548                	.insn	2, 0x6548
- 226:	6c6c                	.insn	2, 0x6c6c
- 228:	6f77206f          	j	7311e <lib_uart.c.a9ea5ae4+0x71041>
- 22c:	6c72                	.insn	2, 0x6c72
- 22e:	0064                	addi	s1,sp,12
+ 22a:	0007d683          	lhu	a3,0(a5)
+ 22e:	0406f693          	andi	a3,a3,64
+ 232:	dee5                	beqz	a3,22a <USART1_IRQHandler+0x22>
+ 234:	0ff77713          	zext.b	a4,a4
+		USART1->DATAR = *bytes++;
+ 238:	00e79223          	sh	a4,4(a5)
+}
+ 23c:	46a2                	lw	a3,8(sp)
+ 23e:	4712                	lw	a4,4(sp)
+ 240:	4782                	lw	a5,0(sp)
+ 242:	0131                	addi	sp,sp,12
+ 244:	30200073          	mret
