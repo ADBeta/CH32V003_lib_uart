@@ -12,6 +12,13 @@
 #include "ch32v003fun.h"
 #include <stddef.h>
 
+
+// TODO: Ring buffer struct????? Status reg,overrun bit and other flags
+// overwrite or reject, compile time flag
+
+
+
+/*** Typedefs and structures *************************************************/
 /// @breif UART Error Values
 typedef enum {
 	UART_OK              = 0,
@@ -59,18 +66,29 @@ typedef enum {
 
 // TODO: Control Bits selection
 
+
 /*** Initialisers ************************************************************/
-/// @breif Initiliase the UART peripheral with the passed configuration
-/// vairables. Uses the default pins (PD5-TX  PD6-RX)
+/// @breif Initiliase the UART peripheral with the passed configuratiion.
+/// Uses the default pins (PD5-TX  PD6-RX)
+///
+/// NOTE: if -buffer- is NULL, or -buffsize- is 0, the driver will fall-back
+/// into realtime mode, where data is only read when requested - any data
+/// received before the function is called will be lost.
+///
+/// @param buffer, the uint8_t buffer to use as an RX buffer (Optional)
+/// @param buffsize, the size of the RX  Buffer in bytes. 
 /// @param baud, buadrate of the interface (921600 - 1200)
 /// @param wordlength, interface word length (8 or 9 bits)
 /// @param parity, Parity variable (None, Even or Odd)
 /// @param stopbits, how many stop bits to transmit (0.5, 1, 2, 1.5)
+/// @param config, the uart_config_t configuration struct
 /// @return uart_err_t status
 uart_err_t uart_init(
-	const uart_baudrate_t baud, 
+	const uint8_t *buffer,
+	const size_t buffsize,
+	const uart_baudrate_t baud,
 	const uart_wordlength_t wordlength,
-	const uart_parity_t parity, 
+	const uart_parity_t parity,
 	const uart_stopbits_t stopbits
 );
 

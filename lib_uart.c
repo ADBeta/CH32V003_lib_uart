@@ -12,19 +12,40 @@
 #include <stddef.h>
 #include <string.h>
 
-// TODO:
-#include <stdio.h>
-
 /*** Static Variables ********************************************************/
-// Ring Buffer Buffer 
+// Ring Buffer Buffer TODO: maybe configurable? 
+// If not NULL, reading will fill into this buffer with interrupts, if it is 
+// NULL, read() will read at real-time, losing un-caught data 
+static uint8_t *uart_ring_ptr  = NULL;
+static size_t   uart_ring_size = 0;
+static size_t   uart_ring_head = 0;
+static size_t   uart_ring_tail = 0;
+
 
 /*** Static Functions ********************************************************/
+// UART RX interrupt handler. TODO: decide on how the buffer gets filled
+void USART1_IRQHandler(void) __attribute__((interrupt));
+void USART1_IRQHandler(void) {
+	// NOTE: This was needed at one point, but seems to have fixed itself.
+	// Re-enables the RXNE Interrput
+	// USART1->CTLR1 |= USART_CTLR1_RXNEIE;
+	
+	// If there is data available in the Data Register, append it to the 
+	// ring buffer
+	if(USART1->STATR & USART_FLAG_RXNE)
+	{
+		char recv = (char)USART1->DATAR;
+		uart_write(&recv, 1);
+	}
+}
 
 /*** Initialisers ************************************************************/
 uart_err_t uart_init(
-	const uart_baudrate_t baud, 
+	const uint8_t *buffer,
+	const size_t buffsize,
+	const uart_baudrate_t baud,
 	const uart_wordlength_t wordlength,
-	const uart_parity_t parity, 
+	const uart_parity_t parity,
 	const uart_stopbits_t stopbits)
 {
 	// Enable GPIOD and UART1 Clock
@@ -36,24 +57,31 @@ uart_err_t uart_init(
 	GPIOD->CFGLR |= (GPIO_CNF_IN_FLOATING << (4*6));                  // PD6 RX
 	
 	// Set CTLR1 Register (Enable RX & TX, set Word Length and Parity)
-	USART1->CTLR1 = (uint16_t)0x0000 | USART_Mode_Tx | USART_Mode_Rx |
-		                               wordlength | parity;
+	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | wordlength | parity;
 	// Set CTLR2 Register (Stopbits)
-	USART1->CTLR2 = (uint16_t)0x0000 | stopbits;
+	USART1->CTLR2 = stopbits;
 	// Set CTLR3 Register TODO: Interrupts and flow control
 	USART1->CTLR3 = (uint16_t)0x0000;
 
 	// Set the Baudrate, assuming 48KHz
 	USART1->BRR = baud;
 
+	// If the RX Buffer is NOT NULL, and the buffer size is NOT 0, set IRQ
+	if(buffer != NULL && buffsize != 0)
+	{
+		// Set static buffer and size variables
+		// uart_ring_ptr  = buffer;
+		// uart_ring_size = buffsize;
+		// uart_ring_head = 0;
+		// uart_ring_tail = 0;
+
+		// Enable the IRQ 
+		USART1->CTLR1 |= USART_CTLR1_RXNEIE;
+		NVIC_EnableIRQ(USART1_IRQn);
+	}
+
 	// Enable the UART
 	USART1->CTLR1 |= CTLR1_UE_Set;
-
-
-	// TODO:
-	USART1->CTLR1 |= USART_CTLR1_RXNEIE;
-	NVIC_EnableIRQ(USART1_IRQn);
-
 
 	return UART_OK;
 }

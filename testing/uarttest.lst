@@ -97,7 +97,7 @@ Disassembly of section .text:
  132:	400217b7          	lui	a5,0x40021
  136:	01080737          	lui	a4,0x1080
  13a:	0007a223          	sw	zero,4(a5) # 40021004 <_eusrstack+0x20020804>
- 13e:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.46a7ff67+0x107e05c>
+ 13e:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.bfd1cf49+0x107e129>
  142:	c398                	sw	a4,0(a5)
  144:	009f0737          	lui	a4,0x9f0
  148:	c798                	sw	a4,8(a5)
@@ -125,8 +125,8 @@ Disassembly of section .text:
 
 0000018c <main>:
 
-}
 
+uint8_t urxb[1024];
 
 int main()
 {
@@ -135,7 +135,7 @@ int main()
 	SystemInit();
  190:	3f69                	jal	12a <SystemInit>
 	const uart_wordlength_t wordlength,
-	const uart_parity_t parity, 
+	const uart_parity_t parity,
 	const uart_stopbits_t stopbits)
 {
 	// Enable GPIOD and UART1 Clock
@@ -143,7 +143,7 @@ int main()
  192:	400216b7          	lui	a3,0x40021
  196:	4e9c                	lw	a5,24(a3)
  198:	6711                	lui	a4,0x4
- 19a:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.46a7ff67+0x1ffb>
+ 19a:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.bfd1cf49+0x20c8>
  19e:	8fd9                	or	a5,a5,a4
  1a0:	ce9c                	sw	a5,24(a3)
 
@@ -168,13 +168,12 @@ int main()
  1c8:	c398                	sw	a4,0(a5)
 	
 	// Set CTLR1 Register (Enable RX & TX, set Word Length and Parity)
-	USART1->CTLR1 = (uint16_t)0x0000 | USART_Mode_Tx | USART_Mode_Rx |
+	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | wordlength | parity;
  1ca:	400147b7          	lui	a5,0x40014
  1ce:	4731                	li	a4,12
  1d0:	80e79623          	sh	a4,-2036(a5) # 4001380c <_eusrstack+0x2001300c>
-		                               wordlength | parity;
 	// Set CTLR2 Register (Stopbits)
-	USART1->CTLR2 = (uint16_t)0x0000 | stopbits;
+	USART1->CTLR2 = stopbits;
  1d4:	80079823          	sh	zero,-2032(a5)
 	// Set CTLR3 Register TODO: Interrupts and flow control
 	USART1->CTLR3 = (uint16_t)0x0000;
@@ -184,29 +183,33 @@ int main()
 	USART1->BRR = baud;
  1dc:	1a100713          	li	a4,417
  1e0:	80e79423          	sh	a4,-2040(a5)
+		// uart_ring_size = buffsize;
+		// uart_ring_head = 0;
+		// uart_ring_tail = 0;
 
-	// Enable the UART
-	USART1->CTLR1 |= CTLR1_UE_Set;
+		// Enable the IRQ 
+		USART1->CTLR1 |= USART_CTLR1_RXNEIE;
  1e4:	80c7d703          	lhu	a4,-2036(a5)
- 1e8:	6689                	lui	a3,0x2
- 1ea:	8f55                	or	a4,a4,a3
- 1ec:	80e79623          	sh	a4,-2036(a5)
-
-
-	// TODO:
-	USART1->CTLR1 |= USART_CTLR1_RXNEIE;
- 1f0:	80c7d703          	lhu	a4,-2036(a5)
- 1f4:	02076713          	ori	a4,a4,32
- 1f8:	80e79623          	sh	a4,-2036(a5)
  *
  * @return  none
  */
 RV_STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 {
   NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
- 1fc:	e000e7b7          	lui	a5,0xe000e
- 200:	4705                	li	a4,1
- 202:	10e7a223          	sw	a4,260(a5) # e000e104 <_eusrstack+0xc000d904>
+ 1e8:	4685                	li	a3,1
+ 1ea:	02076713          	ori	a4,a4,32
+ 1ee:	80e79623          	sh	a4,-2036(a5)
+ 1f2:	e000e737          	lui	a4,0xe000e
+ 1f6:	10d72223          	sw	a3,260(a4) # e000e104 <_eusrstack+0xc000d904>
+		NVIC_EnableIRQ(USART1_IRQn);
+	}
+
+	// Enable the UART
+	USART1->CTLR1 |= CTLR1_UE_Set;
+ 1fa:	80c7d703          	lhu	a4,-2036(a5)
+ 1fe:	6689                	lui	a3,0x2
+ 200:	8f55                	or	a4,a4,a3
+ 202:	80e79623          	sh	a4,-2036(a5)
 		UART_STOPBITS_ONE
 	);
 
