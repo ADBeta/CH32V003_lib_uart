@@ -12,32 +12,73 @@
 #include <stddef.h>
 #include <string.h>
 
+
+#include <stdio.h>
+
+
 /*** Static Variables ********************************************************/
+
+static uint8_t buf[32] = {0};
 // Ring Buffer Buffer TODO: maybe configurable? 
 // If not NULL, reading will fill into this buffer with interrupts, if it is 
 // NULL, read() will read at real-time, losing un-caught data 
-static uint8_t *uart_ring_ptr  = NULL;
-static size_t   uart_ring_size = 0;
-static size_t   uart_ring_head = 0;
-static size_t   uart_ring_tail = 0;
-
+static uint8_t *uart_ring_ptr  = buf;
+static size_t   uart_ring_size = 32;
+static size_t   uart_ring_head = 0; // write position
+static size_t   uart_ring_tail = 0; // read position
 
 /*** Static Functions ********************************************************/
 // UART RX interrupt handler. TODO: decide on how the buffer gets filled
+
+/// @breif UART Receiver Interrupt handler - Puts the data received into the
+/// UART Ring Buffer
+/// @param None
+/// @return None
 void USART1_IRQHandler(void) __attribute__((interrupt));
 void USART1_IRQHandler(void) {
-	// NOTE: This was needed at one point, but seems to have fixed itself.
-	// Re-enables the RXNE Interrput
-	// USART1->CTLR1 |= USART_CTLR1_RXNEIE;
-	
-	// If there is data available in the Data Register, append it to the 
-	// ring buffer
-	if(USART1->STATR & USART_FLAG_RXNE)
+	// Calculate the next write position
+	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
+
+	// If the next position is the same as the tail, TODO:
+	if(next_head == uart_ring_tail) 
 	{
-		char recv = (char)USART1->DATAR;
-		uart_write(&recv, 1);
+		// Reject any data that overfills the buffer
+		return;
 	}
+
+	uint8_t recv = (uint8_t)USART1->DATAR;
+	uart_ring_ptr[uart_ring_head] = recv;
+
+	// Update the head position
+	uart_ring_head = next_head;
 }
+
+
+
+static size_t uart_read_buffer(uint8_t *buffer, size_t len)
+{
+	// Make sure the buffer passed and length are valid
+	if(buffer == NULL || len == 0) return 0;
+
+	size_t bytes_read = 0;
+
+	while(len--)
+	{
+		// If the buffer has no more data, return buffer empty
+		if(uart_ring_head == uart_ring_tail) break;
+
+		*buffer++ = uart_ring_ptr[uart_ring_tail];
+		uart_ring_tail = (uart_ring_tail + 1) & (uart_ring_size - 1);
+
+		bytes_read++;
+	}
+
+	return bytes_read;
+}
+
+
+
+
 
 /*** Initialisers ************************************************************/
 uart_err_t uart_init(
