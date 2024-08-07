@@ -30,7 +30,7 @@ Disassembly of section .init:
   74:	000003f4          	.word	0x000003f4
   78:	000003f4          	.word	0x000003f4
   7c:	000003f4          	.word	0x000003f4
-  80:	000006fc          	.word	0x000006fc
+  80:	00000876          	.word	0x00000876
   84:	000003f4          	.word	0x000003f4
   88:	000003f4          	.word	0x000003f4
   8c:	000003f4          	.word	0x000003f4
@@ -262,7 +262,7 @@ Disassembly of section .text:
  2be:	00d65363          	bge	a2,a3,2c4 <_write.constprop.0+0x3e>
  2c2:	471d                	li	a4,7
  2c4:	00027637          	lui	a2,0x27
- 2c8:	10160613          	addi	a2,a2,257 # 27101 <lib_uart.c.2408e1ab+0x25108>
+ 2c8:	10160613          	addi	a2,a2,257 # 27101 <lib_uart.c.7603c978+0x24fdc>
  2cc:	00032583          	lw	a1,0(t1)
  2d0:	0805f513          	andi	a0,a1,128
  2d4:	ed3d                	bnez	a0,352 <_write.constprop.0+0xcc>
@@ -344,19 +344,19 @@ Disassembly of section .text:
  398:	8d55                	or	a0,a0,a3
  39a:	30551073          	csrw	mtvec,a0
  39e:	20000517          	auipc	a0,0x20000
- 3a2:	c6250513          	addi	a0,a0,-926 # 20000000 <uart_ring_tail>
- 3a6:	82818593          	addi	a1,gp,-2008 # 20000028 <_ebss>
+ 3a2:	c6250513          	addi	a0,a0,-926 # 20000000 <uart_ring_size>
+ 3a6:	81018593          	addi	a1,gp,-2032 # 20000010 <_ebss>
  3aa:	4601                	li	a2,0
  3ac:	00b55663          	bge	a0,a1,3b8 <handle_reset+0x3e>
  3b0:	c110                	sw	a2,0(a0)
  3b2:	0511                	addi	a0,a0,4
  3b4:	feb54ee3          	blt	a0,a1,3b0 <handle_reset+0x36>
  3b8:	00000517          	auipc	a0,0x0
- 3bc:	45850513          	addi	a0,a0,1112 # 810 <_data_lma>
+ 3bc:	54450513          	addi	a0,a0,1348 # 8fc <_data_lma>
  3c0:	20000597          	auipc	a1,0x20000
- 3c4:	c4058593          	addi	a1,a1,-960 # 20000000 <uart_ring_tail>
+ 3c4:	c4058593          	addi	a1,a1,-960 # 20000000 <uart_ring_size>
  3c8:	20000617          	auipc	a2,0x20000
- 3cc:	c3860613          	addi	a2,a2,-968 # 20000000 <uart_ring_tail>
+ 3cc:	c3860613          	addi	a2,a2,-968 # 20000000 <uart_ring_size>
  3d0:	00c58863          	beq	a1,a2,3e0 <handle_reset+0x66>
  3d4:	4114                	lw	a3,0(a0)
  3d6:	c194                	sw	a3,0(a1)
@@ -366,7 +366,7 @@ Disassembly of section .text:
  3e0:	e000f7b7          	lui	a5,0xe000f
  3e4:	4715                	li	a4,5
  3e6:	c398                	sw	a4,0(a5)
- 3e8:	68000793          	li	a5,1664
+ 3e8:	6fc00793          	li	a5,1788
  3ec:	34179073          	csrw	mepc,a5
  3f0:	30200073          	mret
 
@@ -593,273 +593,395 @@ Disassembly of section .text:
  618:	00d70023          	sb	a3,0(a4)
  61c:	b7e5                	j	604 <memcpy+0x2>
 
-0000061e <SystemInit>:
- 61e:	400227b7          	lui	a5,0x40022
- 622:	4705                	li	a4,1
- 624:	c398                	sw	a4,0(a5)
- 626:	400217b7          	lui	a5,0x40021
- 62a:	01080737          	lui	a4,0x1080
- 62e:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x20020804>
- 632:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.2408e1ab+0x107e088>
- 636:	c398                	sw	a4,0(a5)
- 638:	009f0737          	lui	a4,0x9f0
- 63c:	c798                	sw	a4,8(a5)
- 63e:	40021737          	lui	a4,0x40021
- 642:	431c                	lw	a5,0(a4)
- 644:	00679693          	slli	a3,a5,0x6
- 648:	fe06dde3          	bgez	a3,642 <SystemInit+0x24>
- 64c:	435c                	lw	a5,4(a4)
- 64e:	400216b7          	lui	a3,0x40021
- 652:	9bf1                	andi	a5,a5,-4
- 654:	0027e793          	ori	a5,a5,2
- 658:	c35c                	sw	a5,4(a4)
- 65a:	4721                	li	a4,8
- 65c:	42dc                	lw	a5,4(a3)
- 65e:	8bb1                	andi	a5,a5,12
- 660:	fee79ee3          	bne	a5,a4,65c <SystemInit+0x3e>
- 664:	e00007b7          	lui	a5,0xe0000
- 668:	0f878793          	addi	a5,a5,248 # e00000f8 <__global_pointer$+0xbffff8f8>
- 66c:	0007a023          	sw	zero,0(a5)
- 670:	e00007b7          	lui	a5,0xe0000
- 674:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8f4>
- 678:	08000713          	li	a4,128
- 67c:	c398                	sw	a4,0(a5)
- 67e:	8082                	ret
+0000061e <puts>:
+ 61e:	1151                	addi	sp,sp,-12
+ 620:	c406                	sw	ra,8(sp)
+ 622:	c222                	sw	s0,4(sp)
+ 624:	c026                	sw	s1,0(sp)
+ 626:	84aa                	mv	s1,a0
+ 628:	3bf1                	jal	404 <strlen>
+ 62a:	842a                	mv	s0,a0
+ 62c:	85aa                	mv	a1,a0
+ 62e:	8526                	mv	a0,s1
+ 630:	3999                	jal	286 <_write.constprop.0>
+ 632:	6505                	lui	a0,0x1
+ 634:	4585                	li	a1,1
+ 636:	8cc50513          	addi	a0,a0,-1844 # 8cc <USART1_IRQHandler+0x56>
+ 63a:	31b1                	jal	286 <_write.constprop.0>
+ 63c:	40a2                	lw	ra,8(sp)
+ 63e:	00140513          	addi	a0,s0,1
+ 642:	4412                	lw	s0,4(sp)
+ 644:	4482                	lw	s1,0(sp)
+ 646:	0131                	addi	sp,sp,12
+ 648:	8082                	ret
 
-00000680 <main>:
+0000064a <putchar>:
+ 64a:	1151                	addi	sp,sp,-12
+ 64c:	000277b7          	lui	a5,0x27
+ 650:	e0000737          	lui	a4,0xe0000
+ 654:	c222                	sw	s0,4(sp)
+ 656:	c406                	sw	ra,8(sp)
+ 658:	842a                	mv	s0,a0
+ 65a:	10178793          	addi	a5,a5,257 # 27101 <lib_uart.c.7603c978+0x24fdc>
+ 65e:	0f470713          	addi	a4,a4,244 # e00000f4 <__global_pointer$+0xbffff8f4>
+ 662:	4314                	lw	a3,0(a4)
+ 664:	0806f613          	andi	a2,a3,128
+ 668:	e60d                	bnez	a2,692 <putchar+0x48>
+ 66a:	c291                	beqz	a3,66e <putchar+0x24>
+ 66c:	3139                	jal	27a <internal_handle_input.constprop.0>
+ 66e:	6741                	lui	a4,0x10
+ 670:	f0070713          	addi	a4,a4,-256 # ff00 <lib_uart.c.7603c978+0xdddb>
+ 674:	00841793          	slli	a5,s0,0x8
+ 678:	8ff9                	and	a5,a5,a4
+ 67a:	e0000737          	lui	a4,0xe0000
+ 67e:	0857e793          	ori	a5,a5,133
+ 682:	0f470713          	addi	a4,a4,244 # e00000f4 <__global_pointer$+0xbffff8f4>
+ 686:	c31c                	sw	a5,0(a4)
+ 688:	4505                	li	a0,1
+ 68a:	40a2                	lw	ra,8(sp)
+ 68c:	4412                	lw	s0,4(sp)
+ 68e:	0131                	addi	sp,sp,12
+ 690:	8082                	ret
+ 692:	17fd                	addi	a5,a5,-1
+ 694:	f7f9                	bnez	a5,662 <putchar+0x18>
+ 696:	4501                	li	a0,0
+ 698:	bfcd                	j	68a <putchar+0x40>
+
+0000069a <SystemInit>:
+ 69a:	400227b7          	lui	a5,0x40022
+ 69e:	4705                	li	a4,1
+ 6a0:	c398                	sw	a4,0(a5)
+ 6a2:	400217b7          	lui	a5,0x40021
+ 6a6:	01080737          	lui	a4,0x1080
+ 6aa:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x20020804>
+ 6ae:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.7603c978+0x107df5c>
+ 6b2:	c398                	sw	a4,0(a5)
+ 6b4:	009f0737          	lui	a4,0x9f0
+ 6b8:	c798                	sw	a4,8(a5)
+ 6ba:	40021737          	lui	a4,0x40021
+ 6be:	431c                	lw	a5,0(a4)
+ 6c0:	00679693          	slli	a3,a5,0x6
+ 6c4:	fe06dde3          	bgez	a3,6be <SystemInit+0x24>
+ 6c8:	435c                	lw	a5,4(a4)
+ 6ca:	400216b7          	lui	a3,0x40021
+ 6ce:	9bf1                	andi	a5,a5,-4
+ 6d0:	0027e793          	ori	a5,a5,2
+ 6d4:	c35c                	sw	a5,4(a4)
+ 6d6:	4721                	li	a4,8
+ 6d8:	42dc                	lw	a5,4(a3)
+ 6da:	8bb1                	andi	a5,a5,12
+ 6dc:	fee79ee3          	bne	a5,a4,6d8 <SystemInit+0x3e>
+ 6e0:	e00007b7          	lui	a5,0xe0000
+ 6e4:	0f878793          	addi	a5,a5,248 # e00000f8 <__global_pointer$+0xbffff8f8>
+ 6e8:	0007a023          	sw	zero,0(a5)
+ 6ec:	e00007b7          	lui	a5,0xe0000
+ 6f0:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8f4>
+ 6f4:	08000713          	li	a4,128
+ 6f8:	c398                	sw	a4,0(a5)
+ 6fa:	8082                	ret
+
+000006fc <main>:
+#include <stdio.h>
 
 
-uint8_t urxb[1024];
 
 int main()
 {
- 680:	1151                	addi	sp,sp,-12
- 682:	c406                	sw	ra,8(sp)
+ 6fc:	715d                	addi	sp,sp,-80
+ 6fe:	c686                	sw	ra,76(sp)
+ 700:	c4a2                	sw	s0,72(sp)
+ 702:	c2a6                	sw	s1,68(sp)
 	SystemInit();
- 684:	3f69                	jal	61e <SystemInit>
+ 704:	3f59                	jal	69a <SystemInit>
+
+	uint8_t uart_buffer[32] = {0};
+ 706:	02000613          	li	a2,32
+ 70a:	4581                	li	a1,0
+ 70c:	0048                	addi	a0,sp,4
+ 70e:	35cd                	jal	5f0 <memset>
 	const uart_wordlength_t wordlength,
 	const uart_parity_t parity,
 	const uart_stopbits_t stopbits)
 {
 	// Enable GPIOD and UART1 Clock
 	RCC->APB2PCENR |= RCC_APB2Periph_GPIOD | RCC_APB2Periph_USART1;
- 686:	400216b7          	lui	a3,0x40021
- 68a:	4e9c                	lw	a5,24(a3)
- 68c:	6711                	lui	a4,0x4
- 68e:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.2408e1ab+0x2027>
- 692:	8fd9                	or	a5,a5,a4
- 694:	ce9c                	sw	a5,24(a3)
+ 710:	400216b7          	lui	a3,0x40021
+ 714:	4e9c                	lw	a5,24(a3)
+ 716:	6711                	lui	a4,0x4
+ 718:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.7603c978+0x1efb>
+ 71c:	8fd9                	or	a5,a5,a4
+ 71e:	ce9c                	sw	a5,24(a3)
 
 	// Set the RX and TX Pins on PORTD. RX INPUT_FLOATING, TX 10MHz PP AF
 	GPIOD->CFGLR &= ~((0x0F << (4*6)) | (0x0F << (4*5)));  // Clear PD6 & PD5
- 696:	400117b7          	lui	a5,0x40011
- 69a:	40078793          	addi	a5,a5,1024 # 40011400 <__global_pointer$+0x20010c00>
- 69e:	4398                	lw	a4,0(a5)
- 6a0:	f01006b7          	lui	a3,0xf0100
- 6a4:	16fd                	addi	a3,a3,-1 # f00fffff <__global_pointer$+0xd00ff7ff>
- 6a6:	8f75                	and	a4,a4,a3
- 6a8:	c398                	sw	a4,0(a5)
+ 720:	400117b7          	lui	a5,0x40011
+ 724:	40078793          	addi	a5,a5,1024 # 40011400 <__global_pointer$+0x20010c00>
+ 728:	4398                	lw	a4,0(a5)
+ 72a:	f01006b7          	lui	a3,0xf0100
+ 72e:	16fd                	addi	a3,a3,-1 # f00fffff <__global_pointer$+0xd00ff7ff>
+ 730:	8f75                	and	a4,a4,a3
+ 732:	c398                	sw	a4,0(a5)
 	GPIOD->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4*5); // PD5 TX
- 6aa:	4398                	lw	a4,0(a5)
- 6ac:	009006b7          	lui	a3,0x900
- 6b0:	8f55                	or	a4,a4,a3
- 6b2:	c398                	sw	a4,0(a5)
+ 734:	4398                	lw	a4,0(a5)
+ 736:	009006b7          	lui	a3,0x900
+ 73a:	8f55                	or	a4,a4,a3
+ 73c:	c398                	sw	a4,0(a5)
 	GPIOD->CFGLR |= (GPIO_CNF_IN_FLOATING << (4*6));                  // PD6 RX
- 6b4:	4398                	lw	a4,0(a5)
- 6b6:	040006b7          	lui	a3,0x4000
- 6ba:	8f55                	or	a4,a4,a3
- 6bc:	c398                	sw	a4,0(a5)
+ 73e:	4398                	lw	a4,0(a5)
+ 740:	040006b7          	lui	a3,0x4000
+ 744:	8f55                	or	a4,a4,a3
+ 746:	c398                	sw	a4,0(a5)
 	
 	// Set CTLR1 Register (Enable RX & TX, set Word Length and Parity)
 	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | wordlength | parity;
- 6be:	400147b7          	lui	a5,0x40014
- 6c2:	4731                	li	a4,12
- 6c4:	80e79623          	sh	a4,-2036(a5) # 4001380c <__global_pointer$+0x2001300c>
+ 748:	400147b7          	lui	a5,0x40014
+ 74c:	4731                	li	a4,12
+ 74e:	80e79623          	sh	a4,-2036(a5) # 4001380c <__global_pointer$+0x2001300c>
 	// Set CTLR2 Register (Stopbits)
 	USART1->CTLR2 = stopbits;
- 6c8:	80079823          	sh	zero,-2032(a5)
+ 752:	80079823          	sh	zero,-2032(a5)
 	// Set CTLR3 Register TODO: Interrupts and flow control
 	USART1->CTLR3 = (uint16_t)0x0000;
- 6cc:	80079a23          	sh	zero,-2028(a5)
+ 756:	80079a23          	sh	zero,-2028(a5)
 
 	// Set the Baudrate, assuming 48KHz
 	USART1->BRR = baud;
- 6d0:	1a100713          	li	a4,417
- 6d4:	80e79423          	sh	a4,-2040(a5)
-		// uart_ring_size = buffsize;
-		// uart_ring_head = 0;
-		// uart_ring_tail = 0;
+ 75a:	1a100713          	li	a4,417
+ 75e:	80e79423          	sh	a4,-2040(a5)
+
+	// If the RX Buffer is NOT NULL, and the buffer size is NOT 0, set IRQ
+	if(buffer != NULL && buffsize != 0)
+	{
+		// Set static buffer and size variables
+		uart_ring_ptr  = buffer;
+ 762:	0054                	addi	a3,sp,4
+ 764:	80d1a623          	sw	a3,-2036(gp) # 2000000c <uart_ring_ptr>
+		uart_ring_size = buffsize;
+ 768:	02000713          	li	a4,32
+ 76c:	200006b7          	lui	a3,0x20000
+ 770:	00e6a023          	sw	a4,0(a3) # 20000000 <uart_ring_size>
+		uart_ring_head = 0;
+ 774:	20000737          	lui	a4,0x20000
+ 778:	00072223          	sw	zero,4(a4) # 20000004 <uart_ring_head>
+		uart_ring_tail = 0;
 
 		// Enable the IRQ 
 		USART1->CTLR1 |= USART_CTLR1_RXNEIE;
- 6d8:	80c7d703          	lhu	a4,-2036(a5)
+ 77c:	80c7d703          	lhu	a4,-2036(a5)
+		uart_ring_tail = 0;
+ 780:	8001a423          	sw	zero,-2040(gp) # 20000008 <uart_ring_tail>
  *
  * @return  none
  */
 RV_STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 {
   NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
- 6dc:	4685                	li	a3,1
- 6de:	02076713          	ori	a4,a4,32
- 6e2:	80e79623          	sh	a4,-2036(a5)
- 6e6:	e000e737          	lui	a4,0xe000e
- 6ea:	10d72223          	sw	a3,260(a4) # e000e104 <__global_pointer$+0xc000d904>
+ 784:	4685                	li	a3,1
+		USART1->CTLR1 |= USART_CTLR1_RXNEIE;
+ 786:	02076713          	ori	a4,a4,32
+ 78a:	80e79623          	sh	a4,-2036(a5)
+ 78e:	e000e737          	lui	a4,0xe000e
+ 792:	10d72223          	sw	a3,260(a4) # e000e104 <__global_pointer$+0xc000d904>
 		NVIC_EnableIRQ(USART1_IRQn);
 	}
 
 	// Enable the UART
 	USART1->CTLR1 |= CTLR1_UE_Set;
- 6ee:	80c7d703          	lhu	a4,-2036(a5)
- 6f2:	6689                	lui	a3,0x2
- 6f4:	8f55                	or	a4,a4,a3
- 6f6:	80e79623          	sh	a4,-2036(a5)
-		UART_STOPBITS_ONE
-	);
+ 796:	80c7d703          	lhu	a4,-2036(a5)
+ 79a:	6689                	lui	a3,0x2
+ 79c:	8f55                	or	a4,a4,a3
+ 79e:	80e79623          	sh	a4,-2036(a5)
 
 
 
 	while(1)
- 6fa:	a001                	j	6fa <main+0x7a>
-
-000006fc <USART1_IRQHandler>:
-void USART1_IRQHandler(void) {
- 6fc:	fbc10113          	addi	sp,sp,-68
- 700:	ce36                	sw	a3,28(sp)
-	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
- 702:	200006b7          	lui	a3,0x20000
-void USART1_IRQHandler(void) {
- 706:	ca3e                	sw	a5,20(sp)
-	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
- 708:	0046a783          	lw	a5,4(a3) # 20000004 <uart_ring_head>
-void USART1_IRQHandler(void) {
- 70c:	d626                	sw	s1,44(sp)
- 70e:	cc3a                	sw	a4,24(sp)
-	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
- 710:	00178493          	addi	s1,a5,1
- 714:	01f4f713          	andi	a4,s1,31
-	if(next_head == uart_ring_tail) 
- 718:	200004b7          	lui	s1,0x20000
-void USART1_IRQHandler(void) {
- 71c:	d032                	sw	a2,32(sp)
-	if(next_head == uart_ring_tail) 
- 71e:	0004a603          	lw	a2,0(s1) # 20000000 <uart_ring_tail>
-void USART1_IRQHandler(void) {
- 722:	c086                	sw	ra,64(sp)
- 724:	de16                	sw	t0,60(sp)
- 726:	dc1a                	sw	t1,56(sp)
- 728:	da1e                	sw	t2,52(sp)
- 72a:	d822                	sw	s0,48(sp)
- 72c:	d42a                	sw	a0,40(sp)
- 72e:	d22e                	sw	a1,36(sp)
-	if(next_head == uart_ring_tail) 
- 730:	c232                	sw	a2,4(sp)
- 732:	08e60863          	beq	a2,a4,7c2 <USART1_IRQHandler+0xc6>
-	uint8_t recv = (uint8_t)USART1->DATAR;
- 736:	400145b7          	lui	a1,0x40014
- 73a:	80058593          	addi	a1,a1,-2048 # 40013800 <__global_pointer$+0x20013000>
- 73e:	0045d583          	lhu	a1,4(a1)
-	uart_ring_ptr[uart_ring_head] = recv;
- 742:	20000337          	lui	t1,0x20000
- 746:	00830513          	addi	a0,t1,8 # 20000008 <buf>
- 74a:	97aa                	add	a5,a5,a0
-	uint8_t recv = (uint8_t)USART1->DATAR;
- 74c:	00b78023          	sb	a1,0(a5)
-	if((next_head % 10) == 0)
- 750:	853a                	mv	a0,a4
- 752:	45a9                	li	a1,10
-	uart_ring_head = next_head;
- 754:	00e6a223          	sw	a4,4(a3)
-	if((next_head % 10) == 0)
- 758:	c03a                	sw	a4,0(sp)
- 75a:	3aad                	jal	d4 <__umodsi3>
- 75c:	4702                	lw	a4,0(sp)
- 75e:	4612                	lw	a2,4(sp)
- 760:	842a                	mv	s0,a0
- 762:	e125                	bnez	a0,7c2 <USART1_IRQHandler+0xc6>
-	printf("h:%d t:%d\n", uart_ring_head, uart_ring_tail);
- 764:	6505                	lui	a0,0x1
- 766:	85ba                	mv	a1,a4
- 768:	80450513          	addi	a0,a0,-2044 # 804 <USART1_IRQHandler+0x108>
-		uint8_t c[10] = {0};
- 76c:	c402                	sw	zero,8(sp)
- 76e:	c602                	sw	zero,12(sp)
- 770:	00011823          	sh	zero,16(sp)
-	printf("h:%d t:%d\n", uart_ring_head, uart_ring_tail);
- 774:	3d99                	jal	5ca <printf>
- 776:	0004a783          	lw	a5,0(s1)
-		if(uart_ring_head == uart_ring_tail) return UART_BUFFER_EMPTY;
- 77a:	200006b7          	lui	a3,0x20000
-	while(len--)
- 77e:	20000737          	lui	a4,0x20000
-		if(uart_ring_head == uart_ring_tail) return UART_BUFFER_EMPTY;
- 782:	0046a283          	lw	t0,4(a3) # 20000004 <uart_ring_head>
- 786:	4601                	li	a2,0
- 788:	4681                	li	a3,0
-	while(len--)
- 78a:	45a9                	li	a1,10
- 78c:	00870313          	addi	t1,a4,8 # 20000008 <buf>
-		if(uart_ring_head == uart_ring_tail) return UART_BUFFER_EMPTY;
- 790:	04579963          	bne	a5,t0,7e2 <USART1_IRQHandler+0xe6>
- 794:	c219                	beqz	a2,79a <USART1_IRQHandler+0x9e>
- 796:	00f4a023          	sw	a5,0(s1)
-	const uint8_t *bytes = (const uint8_t *)buffer;
-	// Send each byte
-	while(size--)
 	{
-		// Wait for the current transmission to finish
-		while(!(USART1->STATR & USART_FLAG_TC));
- 79a:	400147b7          	lui	a5,0x40014
- 79e:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
-	while(size--)
- 7a2:	46a9                	li	a3,10
-		while(!(USART1->STATR & USART_FLAG_TC));
- 7a4:	0007d703          	lhu	a4,0(a5)
- 7a8:	04077713          	andi	a4,a4,64
- 7ac:	df65                	beqz	a4,7a4 <USART1_IRQHandler+0xa8>
-		USART1->DATAR = *bytes++;
- 7ae:	00840713          	addi	a4,s0,8
- 7b2:	970a                	add	a4,a4,sp
- 7b4:	00074703          	lbu	a4,0(a4)
-	while(size--)
- 7b8:	0405                	addi	s0,s0,1
-		USART1->DATAR = *bytes++;
- 7ba:	00e79223          	sh	a4,4(a5)
-	while(size--)
- 7be:	fed413e3          	bne	s0,a3,7a4 <USART1_IRQHandler+0xa8>
+		uint8_t sec[32] = {0};
+ 7a2:	02000613          	li	a2,32
+ 7a6:	4581                	li	a1,0
+ 7a8:	1048                	addi	a0,sp,36
+ 7aa:	3599                	jal	5f0 <memset>
+size_t uart_read(uint8_t *buffer, size_t len)
+{
+	// Make sure the buffer passed and length are valid
+	if(buffer == NULL || len == 0) return 0;
+
+	size_t bytes_read = 0;
+ 7ac:	4481                	li	s1,0
+	uint8_t current_byte = 0;
+	while(len--)
+	{
+		// If there is no ring buffer set up, read in realtime
+		if(uart_ring_ptr == NULL)
+ 7ae:	80c1a783          	lw	a5,-2036(gp) # 2000000c <uart_ring_ptr>
+ 7b2:	eb85                	bnez	a5,7e2 <main+0xe6>
+		{
+			// Wait for a byte to be in the buffer
+			while(!(USART1->STATR & USART_FLAG_RXNE));
+ 7b4:	400147b7          	lui	a5,0x40014
+ 7b8:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
+ 7bc:	0007d703          	lhu	a4,0(a5)
+ 7c0:	02077713          	andi	a4,a4,32
+ 7c4:	df65                	beqz	a4,7bc <main+0xc0>
+			current_byte = (uint8_t)USART1->DATAR;
+ 7c6:	0047d583          	lhu	a1,4(a5)
+ 7ca:	0ff5f593          	zext.b	a1,a1
+			current_byte = uart_ring_ptr[uart_ring_tail];
+			printf("%c\n", uart_ring_ptr[uart_ring_tail]);
+			uart_ring_tail = (uart_ring_tail + 1) & (uart_ring_size - 1);
+		}
+
+		*buffer++ = current_byte;
+ 7ce:	105c                	addi	a5,sp,36
+ 7d0:	97a6                	add	a5,a5,s1
+ 7d2:	00b78023          	sb	a1,0(a5)
+		bytes_read++;
+ 7d6:	0485                	addi	s1,s1,1
+	while(len--)
+ 7d8:	02000793          	li	a5,32
+ 7dc:	fcf499e3          	bne	s1,a5,7ae <main+0xb2>
+ 7e0:	a01d                	j	806 <main+0x10a>
+			printf("Reading %d ", uart_ring_tail);
+ 7e2:	8081a583          	lw	a1,-2040(gp) # 20000008 <uart_ring_tail>
+ 7e6:	6785                	lui	a5,0x1
+ 7e8:	8d078513          	addi	a0,a5,-1840 # 8d0 <USART1_IRQHandler+0x5a>
+ 7ec:	3bf9                	jal	5ca <printf>
+			if(uart_ring_head == uart_ring_tail) { printf(" breaking\n"); break; }
+ 7ee:	200007b7          	lui	a5,0x20000
+ 7f2:	8081a703          	lw	a4,-2040(gp) # 20000008 <uart_ring_tail>
+ 7f6:	0047a783          	lw	a5,4(a5) # 20000004 <uart_ring_head>
+ 7fa:	04e79763          	bne	a5,a4,848 <main+0x14c>
+ 7fe:	6505                	lui	a0,0x1
+ 800:	8dc50513          	addi	a0,a0,-1828 # 8dc <USART1_IRQHandler+0x66>
+ 804:	3d29                	jal	61e <puts>
+		size_t read = uart_read(sec, 32);
+		printf("read %d bytes: ", read);
+ 806:	6505                	lui	a0,0x1
+ 808:	85a6                	mv	a1,s1
+ 80a:	8ec50513          	addi	a0,a0,-1812 # 8ec <USART1_IRQHandler+0x76>
+ 80e:	3b75                	jal	5ca <printf>
+
+		for(int x = 0; x < 32; x++)
+ 810:	4481                	li	s1,0
+		{
+			printf("%c", sec[x]);
+ 812:	105c                	addi	a5,sp,36
+ 814:	97a6                	add	a5,a5,s1
+ 816:	0007c503          	lbu	a0,0(a5)
+		for(int x = 0; x < 32; x++)
+ 81a:	0485                	addi	s1,s1,1
+			printf("%c", sec[x]);
+ 81c:	353d                	jal	64a <putchar>
+		for(int x = 0; x < 32; x++)
+ 81e:	02000793          	li	a5,32
+ 822:	fef498e3          	bne	s1,a5,812 <main+0x116>
+		}
+
+		printf("\n");
+ 826:	4529                	li	a0,10
+ 828:	350d                	jal	64a <putchar>
+#endif
+
+void DelaySysTick( uint32_t n )
+{
+#ifdef CH32V003
+	uint32_t targend = SysTick->CNT + n;
+ 82a:	e000f7b7          	lui	a5,0xe000f
+ 82e:	4798                	lw	a4,8(a5)
+ 830:	05b8e7b7          	lui	a5,0x5b8e
+ 834:	80078793          	addi	a5,a5,-2048 # 5b8d800 <lib_uart.c.7603c978+0x5b8b6db>
+ 838:	973e                	add	a4,a4,a5
+	while( ((int32_t)( SysTick->CNT - targend )) < 0 );
+ 83a:	e000f6b7          	lui	a3,0xe000f
+ 83e:	469c                	lw	a5,8(a3)
+ 840:	8f99                	sub	a5,a5,a4
+ 842:	fe07cee3          	bltz	a5,83e <main+0x142>
+ 846:	bfb1                	j	7a2 <main+0xa6>
+			current_byte = uart_ring_ptr[uart_ring_tail];
+ 848:	80c1a783          	lw	a5,-2036(gp) # 2000000c <uart_ring_ptr>
+			printf("%c\n", uart_ring_ptr[uart_ring_tail]);
+ 84c:	6505                	lui	a0,0x1
+ 84e:	8e850513          	addi	a0,a0,-1816 # 8e8 <USART1_IRQHandler+0x72>
+			current_byte = uart_ring_ptr[uart_ring_tail];
+ 852:	97ba                	add	a5,a5,a4
+ 854:	0007c583          	lbu	a1,0(a5)
+			printf("%c\n", uart_ring_ptr[uart_ring_tail]);
+ 858:	c02e                	sw	a1,0(sp)
+ 85a:	3b85                	jal	5ca <printf>
+			uart_ring_tail = (uart_ring_tail + 1) & (uart_ring_size - 1);
+ 85c:	20000737          	lui	a4,0x20000
+ 860:	8081a783          	lw	a5,-2040(gp) # 20000008 <uart_ring_tail>
+ 864:	00072703          	lw	a4,0(a4) # 20000000 <uart_ring_size>
+ 868:	4582                	lw	a1,0(sp)
+ 86a:	0785                	addi	a5,a5,1
+ 86c:	177d                	addi	a4,a4,-1
+ 86e:	8ff9                	and	a5,a5,a4
+ 870:	80f1a423          	sw	a5,-2040(gp) # 20000008 <uart_ring_tail>
+ 874:	bfa9                	j	7ce <main+0xd2>
+
+00000876 <USART1_IRQHandler>:
+{
+ 876:	1131                	addi	sp,sp,-20
+ 878:	c03e                	sw	a5,0(sp)
+	uint8_t recv = (uint8_t)USART1->DATAR;
+ 87a:	400147b7          	lui	a5,0x40014
+{
+ 87e:	c632                	sw	a2,12(sp)
+ 880:	c436                	sw	a3,8(sp)
+	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
+ 882:	20000637          	lui	a2,0x20000
+	uint8_t recv = (uint8_t)USART1->DATAR;
+ 886:	8047d683          	lhu	a3,-2044(a5) # 40013804 <__global_pointer$+0x20013004>
+	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
+ 88a:	200007b7          	lui	a5,0x20000
+ 88e:	0007a783          	lw	a5,0(a5) # 20000000 <uart_ring_size>
+{
+ 892:	c82e                	sw	a1,16(sp)
+	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
+ 894:	00462583          	lw	a1,4(a2) # 20000004 <uart_ring_head>
+{
+ 898:	c23a                	sw	a4,4(sp)
+	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
+ 89a:	17fd                	addi	a5,a5,-1
+ 89c:	00158713          	addi	a4,a1,1
+ 8a0:	8ff9                	and	a5,a5,a4
+	if(next_head == uart_ring_tail) 
+ 8a2:	8081a703          	lw	a4,-2040(gp) # 20000008 <uart_ring_tail>
+ 8a6:	00f70b63          	beq	a4,a5,8bc <USART1_IRQHandler+0x46>
+	uart_ring_ptr[uart_ring_head] = recv;
+ 8aa:	80c1a703          	lw	a4,-2036(gp) # 2000000c <uart_ring_ptr>
+ 8ae:	0ff6f693          	zext.b	a3,a3
+	uart_ring_head = next_head;
+ 8b2:	00f62223          	sw	a5,4(a2)
+	uart_ring_ptr[uart_ring_head] = recv;
+ 8b6:	972e                	add	a4,a4,a1
+ 8b8:	00d70023          	sb	a3,0(a4)
 }
- 7c2:	5442                	lw	s0,48(sp)
- 7c4:	4086                	lw	ra,64(sp)
- 7c6:	52f2                	lw	t0,60(sp)
- 7c8:	5362                	lw	t1,56(sp)
- 7ca:	53d2                	lw	t2,52(sp)
- 7cc:	54b2                	lw	s1,44(sp)
- 7ce:	5522                	lw	a0,40(sp)
- 7d0:	5592                	lw	a1,36(sp)
- 7d2:	5602                	lw	a2,32(sp)
- 7d4:	46f2                	lw	a3,28(sp)
- 7d6:	4762                	lw	a4,24(sp)
- 7d8:	47d2                	lw	a5,20(sp)
- 7da:	04410113          	addi	sp,sp,68
- 7de:	30200073          	mret
-		*buffer++ = uart_ring_ptr[uart_ring_tail];
- 7e2:	00f30533          	add	a0,t1,a5
- 7e6:	00054503          	lbu	a0,0(a0)
- 7ea:	00868713          	addi	a4,a3,8
- 7ee:	00270633          	add	a2,a4,sp
- 7f2:	00a60023          	sb	a0,0(a2)
-		uart_ring_tail = (uart_ring_tail + 1) & (uart_ring_size - 1);
- 7f6:	0785                	addi	a5,a5,1
-	while(len--)
- 7f8:	0685                	addi	a3,a3,1
-		uart_ring_tail = (uart_ring_tail + 1) & (uart_ring_size - 1);
- 7fa:	8bfd                	andi	a5,a5,31
- 7fc:	4605                	li	a2,1
-	while(len--)
- 7fe:	f8b699e3          	bne	a3,a1,790 <USART1_IRQHandler+0x94>
- 802:	bf51                	j	796 <USART1_IRQHandler+0x9a>
- 804:	3a68                	.insn	2, 0x3a68
- 806:	6425                	lui	s0,0x9
- 808:	7420                	.insn	2, 0x7420
- 80a:	253a                	.insn	2, 0x253a
- 80c:	0a64                	addi	s1,sp,284
-	...
+ 8bc:	45c2                	lw	a1,16(sp)
+ 8be:	4632                	lw	a2,12(sp)
+ 8c0:	46a2                	lw	a3,8(sp)
+ 8c2:	4712                	lw	a4,4(sp)
+ 8c4:	4782                	lw	a5,0(sp)
+ 8c6:	0151                	addi	sp,sp,20
+ 8c8:	30200073          	mret
+ 8cc:	000a                	c.slli	zero,0x2
+ 8ce:	0000                	unimp
+ 8d0:	6552                	.insn	2, 0x6552
+ 8d2:	6461                	lui	s0,0x18
+ 8d4:	6e69                	lui	t3,0x1a
+ 8d6:	64252067          	.insn	4, 0x64252067
+ 8da:	0020                	addi	s0,sp,8
+ 8dc:	6220                	.insn	2, 0x6220
+ 8de:	6572                	.insn	2, 0x6572
+ 8e0:	6b61                	lui	s6,0x18
+ 8e2:	6e69                	lui	t3,0x1a
+ 8e4:	00000067          	jr	zero # 0 <InterruptVector>
+ 8e8:	6325                	lui	t1,0x9
+ 8ea:	000a                	c.slli	zero,0x2
+ 8ec:	6572                	.insn	2, 0x6572
+ 8ee:	6461                	lui	s0,0x18
+ 8f0:	2520                	.insn	2, 0x2520
+ 8f2:	2064                	.insn	2, 0x2064
+ 8f4:	7962                	.insn	2, 0x7962
+ 8f6:	6574                	.insn	2, 0x6574
+ 8f8:	00203a73          	csrrc	s4,frm,zero

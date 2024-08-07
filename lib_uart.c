@@ -17,25 +17,27 @@
 
 
 /*** Static Variables ********************************************************/
-
-static uint8_t buf[32] = {0};
-// Ring Buffer Buffer TODO: maybe configurable? 
+// Ring Buffer Buffer                                                           TODO: maybe configurable? 
 // If not NULL, reading will fill into this buffer with interrupts, if it is 
 // NULL, read() will read at real-time, losing un-caught data 
-static uint8_t *uart_ring_ptr  = buf;
-static size_t   uart_ring_size = 32;
+static uint8_t *uart_ring_ptr  = NULL;
+static size_t   uart_ring_size = 0;
 static size_t   uart_ring_head = 0; // write position
 static size_t   uart_ring_tail = 0; // read position
 
 /*** Static Functions ********************************************************/
-// UART RX interrupt handler. TODO: decide on how the buffer gets filled
+// UART RX interrupt handler.                                                   TODO: decide on how the buffer gets filled
 
 /// @breif UART Receiver Interrupt handler - Puts the data received into the
 /// UART Ring Buffer
 /// @param None
 /// @return None
 void USART1_IRQHandler(void) __attribute__((interrupt));
-void USART1_IRQHandler(void) {
+void USART1_IRQHandler(void)
+{
+	// Read from the DATAR Register to reset the flag
+	uint8_t recv = (uint8_t)USART1->DATAR;
+
 	// Calculate the next write position
 	size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
 
@@ -46,43 +48,16 @@ void USART1_IRQHandler(void) {
 		return;
 	}
 
-	uint8_t recv = (uint8_t)USART1->DATAR;
+	// Add the received data to the current head position
 	uart_ring_ptr[uart_ring_head] = recv;
-
 	// Update the head position
 	uart_ring_head = next_head;
 }
 
 
-
-static size_t uart_read_buffer(uint8_t *buffer, size_t len)
-{
-	// Make sure the buffer passed and length are valid
-	if(buffer == NULL || len == 0) return 0;
-
-	size_t bytes_read = 0;
-
-	while(len--)
-	{
-		// If the buffer has no more data, return buffer empty
-		if(uart_ring_head == uart_ring_tail) break;
-
-		*buffer++ = uart_ring_ptr[uart_ring_tail];
-		uart_ring_tail = (uart_ring_tail + 1) & (uart_ring_size - 1);
-
-		bytes_read++;
-	}
-
-	return bytes_read;
-}
-
-
-
-
-
 /*** Initialisers ************************************************************/
 uart_err_t uart_init(
-	const uint8_t *buffer,
+	uint8_t *const buffer,
 	const size_t buffsize,
 	const uart_baudrate_t baud,
 	const uart_wordlength_t wordlength,
@@ -111,10 +86,10 @@ uart_err_t uart_init(
 	if(buffer != NULL && buffsize != 0)
 	{
 		// Set static buffer and size variables
-		// uart_ring_ptr  = buffer;
-		// uart_ring_size = buffsize;
-		// uart_ring_head = 0;
-		// uart_ring_tail = 0;
+		uart_ring_ptr  = buffer;
+		uart_ring_size = buffsize;
+		uart_ring_head = 0;
+		uart_ring_tail = 0;
 
 		// Enable the IRQ 
 		USART1->CTLR1 |= USART_CTLR1_RXNEIE;
@@ -187,22 +162,34 @@ uart_err_t uart_println(const char *string)
 
 
 /*** Read ********************************************************************/
-uart_err_t uart_read(void *buffer, const size_t size)
+size_t uart_read(uint8_t *buffer, size_t len)
 {
-	if(buffer == NULL || size == 0) return UART_INVALID_ARGS;
+	// Make sure the buffer passed and length are valid
+	if(buffer == NULL || len == 0) return 0;
 
-	uint8_t *bytes = (uint8_t *)buffer;
-
-	// Keep track of many bytes have been read
-	// TODO: Timeout
-	size_t read = 0;
-	while(read < size)
+	size_t bytes_read = 0;
+	uint8_t current_byte = 0;
+	while(len--)
 	{
-		// Wait for a byte to be in the buffer
-		while(!(USART1->STATR & USART_FLAG_RXNE));
-		*bytes++ = (uint8_t)USART1->DATAR;
-		++read;
+		// If there is no ring buffer set up, read in realtime
+		if(uart_ring_ptr == NULL)
+		{
+			// Wait for a byte to be in the buffer
+			while(!(USART1->STATR & USART_FLAG_RXNE));
+			current_byte = (uint8_t)USART1->DATAR;
+		} else {
+			printf("Reading %d ", uart_ring_tail);
+			// If the buffer has no more data, return buffer empty
+			if(uart_ring_head == uart_ring_tail) { printf(" breaking\n"); break; }
+
+			current_byte = uart_ring_ptr[uart_ring_tail];
+			printf("%c\n", uart_ring_ptr[uart_ring_tail]);
+			uart_ring_tail = (uart_ring_tail + 1) & (uart_ring_size - 1);
+		}
+
+		*buffer++ = current_byte;
+		bytes_read++;
 	}
 
-	return UART_OK;
+	return bytes_read;
 }

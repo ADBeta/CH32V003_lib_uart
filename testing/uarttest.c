@@ -9,15 +9,15 @@
 #include <stdio.h>
 
 
-uint8_t urxb[1024];
 
 int main()
 {
 	SystemInit();
-	
+
+	uint8_t uart_buffer[32] = {0};
 	uart_init(
-		urxb,
-		1024,
+		uart_buffer,
+		32,
 		UART_BAUD_115200,
 		UART_WORDLENGTH_8, 
 		UART_PARITY_NONE,
@@ -28,12 +28,18 @@ int main()
 
 	while(1)
 	{
+		uint8_t sec[32] = {0};
+		size_t read = uart_read(sec, 32);
+		printf("read %d bytes: ", read);
 
-		//uart_read(c, 16);
+		for(int x = 0; x < 32; x++)
+		{
+			printf("%c", sec[x]);
+		}
 
+		printf("\n");
+		Delay_Ms(2000);
 
-
-		//uart_write(c, 16);
 
 	}  
 	

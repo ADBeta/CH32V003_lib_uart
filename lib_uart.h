@@ -92,7 +92,7 @@ typedef enum {
 /// @param config, the uart_config_t configuration struct
 /// @return uart_err_t status
 uart_err_t uart_init(
-	const uint8_t *buffer,
+	uint8_t *const buffer,
 	const size_t buffsize,
 	const uart_baudrate_t baud,
 	const uart_wordlength_t wordlength,
@@ -123,7 +123,7 @@ uart_err_t uart_println(const char *string);
 /// @breif reads the specified number of bytes
 /// @param buffer, buffer to read bytes into
 /// @param size, numbe rof bytes to read
-/// @return uart_err_t status
-uart_err_t uart_read(void *buffer, size_t size);
+/// @return size_t number of bytes read
+size_t uart_read(uint8_t *buffer, size_t len);
 
 #endif
