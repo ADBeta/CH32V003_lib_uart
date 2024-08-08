@@ -4,9 +4,9 @@ uarttest.elf:     file format elf32-littleriscv
 SYMBOL TABLE:
 00000000 l    d  .init	00000000 .init
 000000a0 l    d  .text	00000000 .text
-000008fc l    d  .fini	00000000 .fini
+00000854 l    d  .fini	00000000 .fini
 20000000 l    d  .dalign	00000000 .dalign
-000008fc l    d  .dlalign	00000000 .dlalign
+00000854 l    d  .dlalign	00000000 .dlalign
 20000000 l    d  .data	00000000 .data
 20000000 l    d  .bss	00000000 .bss
 00000000 l    d  .riscv.attributes	00000000 .riscv.attributes
@@ -25,17 +25,17 @@ SYMBOL TABLE:
 00000286 l     F .text	000000e0 _write.constprop.0
 00000366 l     F .text	00000014 __puts_uart
 00000416 l     F .text	000001b4 mini_vpprintf
-00000876 l     F .text	00000056 USART1_IRQHandler
-20000008 l     O .bss	00000004 uart_ring_tail
-2000000c l     O .bss	00000004 uart_ring_ptr
-20000000 l     O .bss	00000004 uart_ring_size
+000007e2 l     F .text	00000062 USART1_IRQHandler
 20000004 l     O .bss	00000004 uart_ring_head
+20000000 l     O .bss	00000004 uart_ring_tail
+20000008 l     O .bss	00000020 uart_ring_buff
 00000000 l    df *ABS*	00000000 div.o
-0000064a g     F .text	00000050 putchar
+0000061e g     F .text	00000050 putchar
 000005ca g     F .text	00000026 printf
 20000800 g       .data	00000000 __global_pointer$
 000003f4 g     F .text	00000002 TIM1_CC_IRQHandler
 000003f4 g     F .text	00000002 HardFault_Handler
+00002067  w      .debug_info	00000000 .hidden lib_uart.c.864075c4
 000003f4 g     F .text	00000002 SysTick_Handler
 000003f4 g     F .text	00000002 PVD_IRQHandler
 000003f6 g     F .text	0000000e NMI_Handler
@@ -43,17 +43,16 @@ SYMBOL TABLE:
 20000000 g       .bss	00000000 _sbss
 00000602 g     F .text	0000001c memcpy
 00000000 g     F .init	0000009c InterruptVector
-0000061e g     F .text	0000002c puts
 000000a8 g     F .text	0000002c .hidden __hidden___udivsi3
 000000a8 g     F .text	0000002c .hidden __udivsi3
+00001d7e  w      .debug_info	00000000 .hidden uarttest.c.190eafbe
 000000a0 g       .init	00000000 _einit
 000003f4 g     F .text	00000002 SPI1_IRQHandler
-00002125  w      .debug_info	00000000 .hidden lib_uart.c.7603c978
 000003f4 g     F .text	00000002 AWU_IRQHandler
 000003f4 g     F .text	00000002 EXTI7_0_IRQHandler
 000003f4 g     F .text	00000002 DMA1_Channel4_IRQHandler
 000003f4 g     F .text	00000002 ADC1_IRQHandler
-20000010 g       .bss	00000000 _ebss
+20000028 g       .bss	00000000 _ebss
 000003f4 g     F .text	00000002 DMA1_Channel7_IRQHandler
 000000d4 g     F .text	00000008 .hidden __umodsi3
 000003f4 g     F .text	00000002 I2C1_EV_IRQHandler
@@ -64,12 +63,12 @@ SYMBOL TABLE:
 000003f4 g     F .text	00000002 DefaultIRQHandler
 20000000 g       .dalign	00000000 _data_vma
 000003f6 g     F .text	0000000e NMI_RCC_CSS_IRQHandler
-0000104a  w      .debug_info	00000000 .hidden ch32v003fun.c.9f5f2630
+00000fa8  w      .debug_info	00000000 .hidden ch32v003fun.c.9f5f2630
 000005f0 g     F .text	00000012 memset
-000006fc g     F .text	0000017a main
+000006d0 g     F .text	00000112 main
 000003f4 g     F .text	00000002 DMA1_Channel5_IRQHandler
 000000a0 g     F .text	00000058 .hidden __divsi3
-0000069a g     F .text	00000062 SystemInit
+0000066e g     F .text	00000062 SystemInit
 00000000 g       .init	00000000 _sinit
 000003f4 g     F .text	00000002 DMA1_Channel3_IRQHandler
 000003f4 g     F .text	00000002 TIM1_UP_IRQHandler
@@ -78,9 +77,8 @@ SYMBOL TABLE:
 20000800 g       .bss	00000000 _eusrstack
 000003f4 g     F .text	00000002 SW_Handler
 000003f4 g     F .text	00000002 TIM1_BRK_IRQHandler
-00001e20  w      .debug_info	00000000 .hidden uarttest.c.d31a4219
 20000000 g       .data	00000000 _edata
-000008fc g       .dlalign	00000000 _data_lma
+00000854 g       .dlalign	00000000 _data_lma
 000000f8 g     F .text	00000024 .hidden __modsi3
 000003f4 g     F .text	00000002 DMA1_Channel2_IRQHandler
 0000037a g     F .text	0000007a handle_reset

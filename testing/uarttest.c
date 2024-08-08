@@ -4,20 +4,17 @@
 *
 * ADBeta (c)	03 Aug 2024
 ******************************************************************************/
+
+
 #include "ch32v003fun.h"
 #include "lib_uart.h"
 #include <stdio.h>
-
-
 
 int main()
 {
 	SystemInit();
 
-	uint8_t uart_buffer[32] = {0};
 	uart_init(
-		uart_buffer,
-		32,
 		UART_BAUD_115200,
 		UART_WORDLENGTH_8, 
 		UART_PARITY_NONE,

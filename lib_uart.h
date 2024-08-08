@@ -25,6 +25,19 @@
 #include "ch32v003fun.h"
 #include <stddef.h>
 
+/*** Configuration Flags *****************************************************/
+// Enable or disable the RX Ring Buffer. When Disabled, read() will read
+// directly from the DATAR Register, using a timeout.
+#define RING_BUFFER_ENABLE
+//#define RING_BUFFER_DISABLE
+
+// Enable or disable overwriting of the UART Ring Buffer. Rejects new bytes
+// when disabled
+#define RING_BUFFER_OVERWRITE
+
+#define RING_BUFFER_SIZE 32 
+
+
 /*** Typedefs and structures *************************************************/
 /// @breif UART Error Values
 typedef enum {
@@ -92,8 +105,6 @@ typedef enum {
 /// @param config, the uart_config_t configuration struct
 /// @return uart_err_t status
 uart_err_t uart_init(
-	uint8_t *const buffer,
-	const size_t buffsize,
 	const uart_baudrate_t baud,
 	const uart_wordlength_t wordlength,
 	const uart_parity_t parity,
