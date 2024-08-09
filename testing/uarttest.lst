@@ -262,7 +262,7 @@ Disassembly of section .text:
  2be:	00d65363          	bge	a2,a3,2c4 <_write.constprop.0+0x3e>
  2c2:	471d                	li	a4,7
  2c4:	00027637          	lui	a2,0x27
- 2c8:	10160613          	addi	a2,a2,257 # 27101 <lib_uart.c.864075c4+0x2509a>
+ 2c8:	10160613          	addi	a2,a2,257 # 27101 <lib_uart.c.d4fb2125+0x2509a>
  2cc:	00032583          	lw	a1,0(t1)
  2d0:	0805f513          	andi	a0,a1,128
  2d4:	ed3d                	bnez	a0,352 <_write.constprop.0+0xcc>
@@ -600,7 +600,7 @@ Disassembly of section .text:
  628:	c222                	sw	s0,4(sp)
  62a:	c406                	sw	ra,8(sp)
  62c:	842a                	mv	s0,a0
- 62e:	10178793          	addi	a5,a5,257 # 27101 <lib_uart.c.864075c4+0x2509a>
+ 62e:	10178793          	addi	a5,a5,257 # 27101 <lib_uart.c.d4fb2125+0x2509a>
  632:	0f470713          	addi	a4,a4,244 # e00000f4 <__global_pointer$+0xbffff8f4>
  636:	4314                	lw	a3,0(a4)
  638:	0806f613          	andi	a2,a3,128
@@ -608,7 +608,7 @@ Disassembly of section .text:
  63e:	c291                	beqz	a3,642 <putchar+0x24>
  640:	392d                	jal	27a <internal_handle_input.constprop.0>
  642:	6741                	lui	a4,0x10
- 644:	f0070713          	addi	a4,a4,-256 # ff00 <lib_uart.c.864075c4+0xde99>
+ 644:	f0070713          	addi	a4,a4,-256 # ff00 <lib_uart.c.d4fb2125+0xde99>
  648:	00841793          	slli	a5,s0,0x8
  64c:	8ff9                	and	a5,a5,a4
  64e:	e0000737          	lui	a4,0xe0000
@@ -632,7 +632,7 @@ Disassembly of section .text:
  676:	400217b7          	lui	a5,0x40021
  67a:	01080737          	lui	a4,0x1080
  67e:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x20020804>
- 682:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.864075c4+0x107e01a>
+ 682:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.d4fb2125+0x107e01a>
  686:	c398                	sw	a4,0(a5)
  688:	009f0737          	lui	a4,0x9f0
  68c:	c798                	sw	a4,8(a5)
@@ -680,7 +680,7 @@ int main()
  6dc:	400216b7          	lui	a3,0x40021
  6e0:	4e9c                	lw	a5,24(a3)
  6e2:	6711                	lui	a4,0x4
- 6e4:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.864075c4+0x1fb9>
+ 6e4:	02070713          	addi	a4,a4,32 # 4020 <lib_uart.c.d4fb2125+0x1fb9>
  6e8:	8fd9                	or	a5,a5,a4
  6ea:	ce9c                	sw	a5,24(a3)
 
@@ -803,7 +803,7 @@ void DelaySysTick( uint32_t n )
  7a6:	e000f7b7          	lui	a5,0xe000f
  7aa:	4798                	lw	a4,8(a5)
  7ac:	05b8e7b7          	lui	a5,0x5b8e
- 7b0:	80078793          	addi	a5,a5,-2048 # 5b8d800 <lib_uart.c.864075c4+0x5b8b799>
+ 7b0:	80078793          	addi	a5,a5,-2048 # 5b8d800 <lib_uart.c.d4fb2125+0x5b8b799>
  7b4:	973e                	add	a4,a4,a5
 	while( ((int32_t)( SysTick->CNT - targend )) < 0 );
  7b6:	e000f6b7          	lui	a3,0xe000f

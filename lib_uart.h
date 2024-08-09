@@ -4,19 +4,6 @@
 *
 * See GitHub for details: https://github.com/ADBeta/CH32V003_lib_uart
 *
-* When Initialising the UART Library, you can pass an array, or pass NULL.
-* If you pass an array, the library will use it as a ring buffer, with the
-* default behaviour to reject data when the buffer is full. 
-* NOTE: See `#define UART_BUFFER_OVERWRITE and ...... flags to change the 
-* behaviour of the buffer.
-*
-* If you pass NULL, or 0 buffsize, the library will only read data from the
-* UART when a read() function is called, any data received before this will be
-* lost.
-*
-* NOTE: This realtime method will TODO: timeout or stop when data is empty?
-* See the UART_REALTIME_TIMEOUT ..? flags to change these variables
-*
 * ADBeta (c) 2024
 ******************************************************************************/
 #ifndef LIB_UART_H
@@ -34,9 +21,10 @@
 // Enable or disable overwriting of the UART Ring Buffer. Rejects new bytes
 // when disabled
 #define RING_BUFFER_OVERWRITE
+#define RING_BUFFER_SIZE 32
 
-#define RING_BUFFER_SIZE 32 
-
+// If the ring buffer is disabled, use a timeout of variable (milliseconds)
+#define READ_TIMEOUT_MS 100
 
 /*** Typedefs and structures *************************************************/
 /// @breif UART Error Values

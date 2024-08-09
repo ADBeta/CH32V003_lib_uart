@@ -12,10 +12,6 @@
 #include <stddef.h>
 #include <string.h>
 
-
-// TODO:
-#include <stdio.h>
-
 /*** Macro Functions *********************************************************/
 #define IS_POWER_OF_2(x) (((x) != 0) && (((x) & ((x) - 1)) == 0))
 
@@ -56,8 +52,6 @@ void USART1_IRQHandler(void)
 	uint8_t recv = (uint8_t)USART1->DATAR;
 
 	// Calculate the next write position
-	// TODO: Remove
-	//size_t next_head = (uart_ring_head + 1) & (uart_ring_size - 1);
 	size_t next_head = (uart_ring_head + 1) & uart_ring_mask;
 
 	// If the next position is the same as the tail, either reject the new data
@@ -80,8 +74,6 @@ void USART1_IRQHandler(void)
 }
 
 #endif
-
-/*** Ring Buffer Disabled ***/
 
 
 /*** Initialisers ************************************************************/
@@ -181,12 +173,12 @@ uart_err_t uart_println(const char *string)
 
 
 /*** Read ********************************************************************/
+#ifdef RING_BUFFER_ENABLE
 /// @breif reads len number of bytes from the RX Ring Buffer. 
 /// Ring Buffer method is only enabled when RING_BUFFER_ENABLE is deinfed.
 /// @param *buffer, the buffer to read to
 /// @param len, the maximum number of bytes to read to the buffer
 /// @return size_t number of bytes read
-#ifdef RING_BUFFER_ENABLE
 size_t uart_read(uint8_t *buffer, size_t len)
 {
 	// Make sure the buffer passed and length are valid
@@ -215,7 +207,21 @@ size_t uart_read(uint8_t *buffer, size_t len)
 /// @param *buffer, the buffer to read to
 /// @param len, the maximum number of bytes to read to the buffer
 /// @return size_t number of bytes read
+/*
 size_t uart_readln(uint8_t *buffer, size_t len)
+{
+}
+*/
+#endif
+
+
+#ifdef RING_BUFFER_DISABLE
+/// @breif reads len number of bytes in realtime, until buffer is full, or
+/// the timeout is reached.
+/// @param *buffer, the buffer to read to
+/// @param len, the maximum number of bytes to read to the buffer
+/// @return size_t number of bytes read
+size_t uart_read(uint8_t *buffer, size_t len)
 {
 	// Make sure the buffer passed and length are valid
 	if(buffer == NULL || len == 0) return 0;
@@ -223,31 +229,28 @@ size_t uart_readln(uint8_t *buffer, size_t len)
 	size_t bytes_read = 0;
 	while(len--)
 	{
-		printf("Reading %d ", uart_ring_tail);
-		// If the buffer has no more data, return buffer empty
-		if(uart_ring_head == uart_ring_tail) { printf(" breaking\n"); break; }
-		
-		printf("%c\n", uart_ring_buff[uart_ring_tail]);
-		*buffer++ = uart_ring_buff[uart_ring_tail];
+		// TODO: Timeout
+		// Wait for a byte to be in the buffer
+		while(!(USART1->STATR & USART_FLAG_RXNE));
+		*buffer++ = (uint8_t)USART1->DATAR;
 
-		// Incriment the ring buffer tail position
-		uart_ring_tail = (uart_ring_tail + 1) & uart_ring_mask;
-		
+
+		// Incriment the count of bytes
 		bytes_read++;
 	}
 
 	return bytes_read;
 }
 
+/// @breif reads from the RX Ring Buffer until it finds a newline delimiter
+/// (\n or \r) then a non-delim char, or until it has read -len- bytes.
+/// Ring Buffer method is only enabled when RING_BUFFER_ENABLE is defined.
+/// @param *buffer, the buffer to read to
+/// @param len, the maximum number of bytes to read to the buffer
+/// @return size_t number of bytes read
+/*
+size_t uart_readln(uint8_t *buffer, size_t len)
+{
+}
+*/
 #endif
-
-
-
-
-// Wait for a byte to be in the buffer
-// while(!(USART1->STATR & USART_FLAG_RXNE));
-// current_byte = (uint8_t)USART1->DATAR;
-
-
-
-

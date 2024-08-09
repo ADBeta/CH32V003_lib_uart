@@ -35,7 +35,6 @@ SYMBOL TABLE:
 20000800 g       .data	00000000 __global_pointer$
 000003f4 g     F .text	00000002 TIM1_CC_IRQHandler
 000003f4 g     F .text	00000002 HardFault_Handler
-00002067  w      .debug_info	00000000 .hidden lib_uart.c.864075c4
 000003f4 g     F .text	00000002 SysTick_Handler
 000003f4 g     F .text	00000002 PVD_IRQHandler
 000003f6 g     F .text	0000000e NMI_Handler
@@ -45,11 +44,11 @@ SYMBOL TABLE:
 00000000 g     F .init	0000009c InterruptVector
 000000a8 g     F .text	0000002c .hidden __hidden___udivsi3
 000000a8 g     F .text	0000002c .hidden __udivsi3
-00001d7e  w      .debug_info	00000000 .hidden uarttest.c.190eafbe
 000000a0 g       .init	00000000 _einit
 000003f4 g     F .text	00000002 SPI1_IRQHandler
 000003f4 g     F .text	00000002 AWU_IRQHandler
 000003f4 g     F .text	00000002 EXTI7_0_IRQHandler
+00002067  w      .debug_info	00000000 .hidden lib_uart.c.d4fb2125
 000003f4 g     F .text	00000002 DMA1_Channel4_IRQHandler
 000003f4 g     F .text	00000002 ADC1_IRQHandler
 20000028 g       .bss	00000000 _ebss
@@ -63,6 +62,7 @@ SYMBOL TABLE:
 000003f4 g     F .text	00000002 DefaultIRQHandler
 20000000 g       .dalign	00000000 _data_vma
 000003f6 g     F .text	0000000e NMI_RCC_CSS_IRQHandler
+00001d7e  w      .debug_info	00000000 .hidden uarttest.c.b8a64a67
 00000fa8  w      .debug_info	00000000 .hidden ch32v003fun.c.9f5f2630
 000005f0 g     F .text	00000012 memset
 000006d0 g     F .text	00000112 main
