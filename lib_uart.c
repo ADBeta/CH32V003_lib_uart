@@ -114,7 +114,6 @@ uart_err_t uart_init(
 }
 
 
-
 /*** Write *******************************************************************/
 uart_err_t uart_write(const void *buffer, size_t size)
 {
@@ -229,12 +228,18 @@ size_t uart_read(uint8_t *buffer, size_t len)
 	size_t bytes_read = 0;
 	while(len--)
 	{
-		// TODO: Timeout
-		// Wait for a byte to be in the buffer
-		while(!(USART1->STATR & USART_FLAG_RXNE));
+		// TODO: Use systick or current_millis to timeout
+		// Wait for a byte to be in the buffer. If it exceeds timeout, 
+		// exit the function. Uses a poor timout method for now. Will fix when
+		// there is a current_millis() fumction.
+		uint32_t timeout_ticks = 0;
+		while(!(USART1->STATR & USART_FLAG_RXNE))
+		{
+			if(timeout_ticks++ == READ_TIMEOUT_MS) return bytes_read;
+			Delay_Ms(1);
+		}
+
 		*buffer++ = (uint8_t)USART1->DATAR;
-
-
 		// Incriment the count of bytes
 		bytes_read++;
 	}

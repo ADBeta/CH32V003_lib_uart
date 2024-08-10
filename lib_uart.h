@@ -21,7 +21,7 @@
 // Enable or disable overwriting of the UART Ring Buffer. Rejects new bytes
 // when disabled
 #define RING_BUFFER_OVERWRITE
-#define RING_BUFFER_SIZE 32
+#define RING_BUFFER_SIZE 128
 
 // If the ring buffer is disabled, use a timeout of variable (milliseconds)
 #define READ_TIMEOUT_MS 100
