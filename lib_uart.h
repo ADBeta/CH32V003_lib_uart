@@ -3,6 +3,7 @@
 * A simple but full-featured library for UART on the CH32V003
 *
 * See GitHub for details: https://github.com/ADBeta/CH32V003_lib_uart
+* lib_uart is under GPL 2.0. See LICENSE for more information
 *
 * ADBeta (c) 2024
 ******************************************************************************/
@@ -92,7 +93,7 @@ typedef enum {
 /// @param stopbits, how many stop bits to transmit (0.5, 1, 2, 1.5)
 /// @param config, the uart_config_t configuration struct
 /// @return uart_err_t status
-uart_err_t uart_init(
+void uart_init(
 	const uart_baudrate_t baud,
 	const uart_wordlength_t wordlength,
 	const uart_parity_t parity,

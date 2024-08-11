@@ -18,3 +18,4 @@ See `/testing/uarttest.c` for a basic usage example of the library
 
 ----
 ADBeta (c)    2024
+This software is under the GPL 2.0 Licence, please see LICENCE for information

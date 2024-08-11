@@ -3,14 +3,13 @@
 * A simple but full-featured library for UART on the CH32V003
 *
 * See GitHub for details: https://github.com/ADBeta/CH32V003_lib_uart
+* lib_uart is under GPL 2.0. See LICENSE for more information
 *
 * ADBeta (c) 2024
 ******************************************************************************/
 #include "lib_uart.h"
 #include "ch32v003fun.h"
-
 #include <stddef.h>
-#include <string.h>
 
 /*** Macro Functions *********************************************************/
 #define IS_POWER_OF_2(x) (((x) != 0) && (((x) & ((x) - 1)) == 0))
@@ -77,7 +76,7 @@ void USART1_IRQHandler(void)
 
 
 /*** Initialisers ************************************************************/
-uart_err_t uart_init(
+void uart_init(
 	const uart_baudrate_t baud,
 	const uart_wordlength_t wordlength,
 	const uart_parity_t parity,
@@ -109,8 +108,6 @@ uart_err_t uart_init(
 
 	// Enable the UART
 	USART1->CTLR1 |= CTLR1_UE_Set;
-
-	return UART_OK;
 }
 
 
@@ -137,8 +134,7 @@ uart_err_t uart_print(const char *string)
 {
 	if(string == NULL) return UART_INVALID_ARGS;
 	
-	size_t len = strlen(string);
-	while(len--)
+	while(*string != '\0')
 	{
 		// Wait for the current transmission to finish
 		while(!(USART1->STATR & USART_FLAG_TC));
@@ -153,13 +149,8 @@ uart_err_t uart_println(const char *string)
 {
 	if(string == NULL) return UART_INVALID_ARGS;
 
-	size_t len = strlen(string);
-	while(len--)
-	{
-		// Wait for the current transmission to finish
-		while(!(USART1->STATR & USART_FLAG_TC));
-		USART1->DATAR = *string++;
-	}
+	uart_err_t str_err = uart_print(string);
+	if(str_err != UART_OK) return str_err;
 
 	// Print the terminating characters
 	while(!(USART1->STATR & USART_FLAG_TC));
