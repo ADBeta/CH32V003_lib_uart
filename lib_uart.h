@@ -13,10 +13,9 @@
 #include <stddef.h>
 
 /*** Configuration Flags *****************************************************/
-// Enable or disable the RX Ring Buffer. When Disabled, read() will read
+// Enable (or not) the RX Ring Buffer. When Disabled, read() will read
 // directly from the DATAR Register, using a timeout.
 #define RING_BUFFER_ENABLE
-//#define RING_BUFFER_DISABLE
 
 // Enable or disable overwriting of the UART Ring Buffer. Rejects new bytes
 // when disabled
