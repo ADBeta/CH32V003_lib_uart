@@ -10,7 +10,6 @@
 #include "ch32v003fun.h"
 
 #include <stddef.h>
-#include <string.h>
 
 /*** Macro Functions *********************************************************/
 #define IS_POWER_OF_2(x) (((x) != 0) && (((x) & ((x) - 1)) == 0))
@@ -137,12 +136,11 @@ uart_err_t uart_print(const char *string)
 {
 	if(string == NULL) return UART_INVALID_ARGS;
 	
-	size_t len = strlen(string);
-	while(len--)
+	for(const char *c = string; *c; ++c)
 	{
 		// Wait for the current transmission to finish
 		while(!(USART1->STATR & USART_FLAG_TC));
-		USART1->DATAR = *string++;
+		USART1->DATAR = *c;
 	}
 
 	return UART_OK;
@@ -151,15 +149,8 @@ uart_err_t uart_print(const char *string)
 
 uart_err_t uart_println(const char *string)
 {
-	if(string == NULL) return UART_INVALID_ARGS;
-
-	size_t len = strlen(string);
-	while(len--)
-	{
-		// Wait for the current transmission to finish
-		while(!(USART1->STATR & USART_FLAG_TC));
-		USART1->DATAR = *string++;
-	}
+	uart_err_t fres = uart_print(string);
+	if(fres != UART_OK) return fres;
 
 	// Print the terminating characters
 	while(!(USART1->STATR & USART_FLAG_TC));
