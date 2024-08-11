@@ -27,7 +27,7 @@
 #define READ_TIMEOUT_MS 100
 
 /*** Typedefs and structures *************************************************/
-/// @breif UART Error Values
+/// @brief UART Error Values
 typedef enum {
 	UART_OK              = 0,
 	UART_TIMEOUT,
@@ -35,7 +35,7 @@ typedef enum {
 	UART_BUFFER_EMPTY,
 } uart_err_t;
 
-/// @breif Defines some commonly used baud rates
+/// @brief Defines some commonly used baud rates
 /// DIV = (HCLK / (16 * BAUD)) * 16 (HCLK is 48MHz)
 typedef enum {
 	UART_BAUD_921600 = ((uint16_t)0x0034),    // 923076    0.16% Fast
@@ -51,20 +51,20 @@ typedef enum {
 	UART_BAUD_1200   = ((uint16_t)0x9C40),    // 1200      0.00%
 } uart_baudrate_t;
 
-/// @breif UART Word Length Enum
+/// @brief UART Word Length Enum
 typedef enum {
 	UART_WORDLENGTH_8 = ((uint16_t)0x0000),
 	UART_WORDLENGTH_9 = ((uint16_t)0x1000),
 } uart_wordlength_t;
 
-/// @breif UART Parity Enum
+/// @brief UART Parity Enum
 typedef enum {
 	UART_PARITY_NONE = ((uint16_t)0x0000),
 	UART_PARITY_EVEN = ((uint16_t)0x0400),
 	UART_PARITY_ODD  = ((uint16_t)0x0600),
 } uart_parity_t;
 
-/// @breif UART Stop Bits Enum
+/// @brief UART Stop Bits Enum
 typedef enum {
 	UART_STOPBITS_ONE       = ((uint16_t)0x0000),
 	UART_STOPBITS_HALF      = ((uint16_t)0x1000),
@@ -77,7 +77,7 @@ typedef enum {
 
 
 /*** Initialisers ************************************************************/
-/// @breif Initiliase the UART peripheral with the passed configuratiion.
+/// @brief Initiliase the UART peripheral with the passed configuratiion.
 /// Uses the default pins (PD5-TX  PD6-RX)
 ///
 /// NOTE: if -buffer- is NULL, or -buffsize- is 0, the driver will fall-back
@@ -101,25 +101,25 @@ uart_err_t uart_init(
 
 
 /*** Write *******************************************************************/
-/// @breif writes raw bytes to the UART
+/// @brief writes raw bytes to the UART
 /// @param buffer, raw buffer, can be any type
 /// @param size, number of bytes to transmit.
 /// @return uart_err_t status
 uart_err_t uart_write(const void *buffer, const size_t size);
 
-/// @breif Prints a string to the UART, without any added ternination
+/// @brief Prints a string to the UART, without any added ternination
 /// @param string, input c string to print
 /// @return uart_err_t status
 uart_err_t uart_print(const char *string);
 
-/// @breif Prints a string to the UART, and adds termination \r\n characters
+/// @brief Prints a string to the UART, and adds termination \r\n characters
 /// @param string, input c string to print
 /// @return uart_err_t status
 uart_err_t uart_println(const char *string);
 
 
 /** Read *********************************************************************/
-/// @breif reads the specified number of bytes
+/// @brief reads the specified number of bytes
 /// @param buffer, buffer to read bytes into
 /// @param size, numbe rof bytes to read
 /// @return size_t number of bytes read
