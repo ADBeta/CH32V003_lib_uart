@@ -41,7 +41,7 @@ static size_t       uart_ring_head = 0;
 static size_t       uart_ring_tail = 0;
 
 // define and declare the UART IRQ Function
-/// @breif UART Receiver Interrupt handler - Puts the data received into the
+/// @brief UART Receiver Interrupt handler - Puts the data received into the
 /// UART Ring Buffer
 /// @param None
 /// @return None
@@ -59,7 +59,7 @@ void USART1_IRQHandler(void)
 	if(next_head == uart_ring_tail) 
 	{
 		#ifdef RING_BUFFER_OVERWRITE
-			// Incriment the tail position
+			// Increment the tail position
 			uart_ring_tail = (uart_ring_tail + 1) & uart_ring_mask;
 		#else
 			// Reject any data that overfills the buffer
@@ -173,7 +173,7 @@ uart_err_t uart_println(const char *string)
 
 /*** Read ********************************************************************/
 #ifdef RING_BUFFER_ENABLE
-/// @breif reads len number of bytes from the RX Ring Buffer. 
+/// @brief reads len number of bytes from the RX Ring Buffer. 
 /// Ring Buffer method is only enabled when RING_BUFFER_ENABLE is deinfed.
 /// @param *buffer, the buffer to read to
 /// @param len, the maximum number of bytes to read to the buffer
@@ -191,16 +191,16 @@ size_t uart_read(uint8_t *buffer, size_t len)
 		
 		// Add the current tail byte to the buffer
 		*buffer++ = uart_ring_buff[uart_ring_tail];
-		// Incriment the ring buffer tail position
+		// Increment the ring buffer tail position
 		uart_ring_tail = (uart_ring_tail + 1) & uart_ring_mask;
-		// Incriment the count of bytes
+		// Increment the count of bytes
 		bytes_read++;
 	}
 
 	return bytes_read;
 }
 
-/// @breif reads from the RX Ring Buffer until it finds a newline delimiter
+/// @brief reads from the RX Ring Buffer until it finds a newline delimiter
 /// (\n or \r) then a non-delim char, or until it has read -len- bytes.
 /// Ring Buffer method is only enabled when RING_BUFFER_ENABLE is defined.
 /// @param *buffer, the buffer to read to
@@ -215,7 +215,7 @@ size_t uart_readln(uint8_t *buffer, size_t len)
 
 
 #ifdef RING_BUFFER_DISABLE
-/// @breif reads len number of bytes in realtime, until buffer is full, or
+/// @brief reads len number of bytes in realtime, until buffer is full, or
 /// the timeout is reached.
 /// @param *buffer, the buffer to read to
 /// @param len, the maximum number of bytes to read to the buffer
@@ -240,14 +240,14 @@ size_t uart_read(uint8_t *buffer, size_t len)
 		}
 
 		*buffer++ = (uint8_t)USART1->DATAR;
-		// Incriment the count of bytes
+		// Increment the count of bytes
 		bytes_read++;
 	}
 
 	return bytes_read;
 }
 
-/// @breif reads from the RX Ring Buffer until it finds a newline delimiter
+/// @brief reads from the RX Ring Buffer until it finds a newline delimiter
 /// (\n or \r) then a non-delim char, or until it has read -len- bytes.
 /// Ring Buffer method is only enabled when RING_BUFFER_ENABLE is defined.
 /// @param *buffer, the buffer to read to
