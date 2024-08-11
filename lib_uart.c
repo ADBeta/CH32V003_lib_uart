@@ -15,16 +15,6 @@
 /*** Macro Functions *********************************************************/
 #define IS_POWER_OF_2(x) (((x) != 0) && (((x) & ((x) - 1)) == 0))
 
-/*** Configuration ***********************************************************/
-// Make sure only one ring buffer setting is selected
-#if defined(RING_BUFFER_ENABLE) && defined(RING_BUFFER_DISABLE)
-	#error "CONFIG ERROR: Ring Buffer is enabled and disabled simultaniously"
-#endif
-// Make sure at least one ring buffer is selected
-#if !defined(RING_BUFFER_ENABLE) && !defined(RING_BUFFER_DISABLE)
-	#error "CONFIG ERROR: Must define one of RING_BUFFER_ENABLE or RING_BUFFER_DISABLE"
-#endif
-
 /*** Ring Buffer Enabled ***/
 // If the Ring Buffer is enabled, configure it
 #ifdef RING_BUFFER_ENABLE
@@ -211,10 +201,9 @@ size_t uart_readln(uint8_t *buffer, size_t len)
 {
 }
 */
-#endif
+#else
 
 
-#ifdef RING_BUFFER_DISABLE
 /// @breif reads len number of bytes in realtime, until buffer is full, or
 /// the timeout is reached.
 /// @param *buffer, the buffer to read to
