@@ -1,6 +1,6 @@
 /******************************************************************************
 * UART Library Tester program
-* lib_uart is under GPL 2.0. See LICENSE for more information
+* lib_uart is under the MIT License. See LICENSE for more information
 *
 * ADBeta (c)	10 Aug 2024
 ******************************************************************************/

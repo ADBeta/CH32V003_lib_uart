@@ -3,7 +3,7 @@
 * A simple but full-featured library for UART on the CH32V003
 *
 * See GitHub for details: https://github.com/ADBeta/CH32V003_lib_uart
-* lib_uart is under GPL 2.0. See LICENSE for more information
+* lib_uart is under the MIT License. See LICENSE for more information
 *
 * ADBeta (c) 2024
 ******************************************************************************/
