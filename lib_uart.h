@@ -14,38 +14,27 @@
 #include <stddef.h>
 
 /*** Configuration Flags *****************************************************/
-// Enable or disable the RX Ring Buffer. When Disabled, read() will read
-// directly from the DATAR Register, using a timeout.
-#define RING_BUFFER_ENABLE
-//#define RING_BUFFER_DISABLE
+// Enable overwriting of the RX Ring Buffer.
+// Enabled:  Incomming data will overwrite older data in the buffer
+// Disabled: Incomming data will not be added to the buffer until space is free
+#define RX_RING_BUFFER_OVERWRITE
 
-// Enable or disable overwriting of the UART Ring Buffer. Rejects new bytes
-// when disabled
-#define RING_BUFFER_OVERWRITE
-#define RING_BUFFER_SIZE 128
+// Enable or disable the TX Ring Buffer
+// Enabled:  Sent data will be put in a buffer, then interrupts will handle
+// the data transmission
+// Disabled: Sent data is sent one byte at a time in a blocking function
+#define TX_RING_BUFFER_ENABLE
 
-// If the ring buffer is disabled, use a timeout of variable (milliseconds)
-#define READ_TIMEOUT_MS 100
+// Size of the RX and TX Ring Buffers, MUST be a power of 2
+#define RX_RING_BUFFER_SIZE 128
+#define TX_RING_BUFFER_SIZE 128
 
 /*** Macro Functions *********************************************************/
 #define IS_POWER_OF_2(x) (((x) != 0) && (((x) & ((x) - 1)) == 0))
 
 /*** Configuration ***********************************************************/
-// Make sure only one ring buffer setting is selected
-#if defined(RING_BUFFER_ENABLE) && defined(RING_BUFFER_DISABLE)
-	#error "CONFIG ERROR: Ring Buffer is enabled and disabled simultaniously"
-#endif
-// Make sure at least one ring buffer is selected
-#if !defined(RING_BUFFER_ENABLE) && !defined(RING_BUFFER_DISABLE)
-	#error "CONFIG ERROR: Must define one of RING_BUFFER_ENABLE or RING_BUFFER_DISABLE"
-#endif
-
-/*** Ring Buffer Enabled ***/
-// If the Ring Buffer is enabled, configure it
-#ifdef RING_BUFFER_ENABLE
-
 // Make sure the size of the buffer is not 0, and is a power of 2
-#if !IS_POWER_OF_2(RING_BUFFER_SIZE)
+#if !IS_POWER_OF_2(RX_RING_BUFFER_SIZE) || !IS_POWER_OF_2(TX_RING_BUFFER_SIZE)
 	#error "CONFIG ERROR: Ring Buffer Size must be a Power of 2"
 #endif
 
@@ -55,8 +44,17 @@ static uint8_t      uart_ring_buff[RING_BUFFER_SIZE];
 static size_t       uart_ring_head = 0;
 static size_t       uart_ring_tail = 0;
 
-
 /*** Typedefs and structures *************************************************/
+/// @breif UART Ring Buffer Struct (for RX and TX)
+typedef struct {
+	uint8_t        buffer;
+	uint32_t       head;
+	uint32_t       tail;
+	const uint32_t mask;
+} uart_buffer_t;
+
+
+
 /// @brief UART Error Values
 typedef enum {
 	UART_OK              = 0,
@@ -105,8 +103,7 @@ typedef enum {
 
 // TODO: Control Bits selection
 
-
-// define and declare the UART IRQ Function
+/// TODO: 
 /// @brief UART Receiver Interrupt handler - Puts the data received into the
 /// UART Ring Buffer
 /// @param None
