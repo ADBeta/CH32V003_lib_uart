@@ -1,20 +1,25 @@
 # CH32V003_lib_uart
 
 ## **NOTE:** This library requires use of the ch32v003fun library  
-lib_uart is a light and simple UART Library for the CH32V003 (and related) 
-Microcontrollers.  
+`lib_uart` is a light, but fully-featured UART Library for the CH32V003 
+Microcontroller Series.  
 The Library supports
-* Multiple Baud Rates from `1200` to `921600`
-* RX into a configurable Ring Buffer (Default configuration)
-* RX in realtime, using timeouts (Optional configuration)
+* Support for all Alternative Pinouts (V003)
+* Many Baud Rates from `1200` to `921600`
+* RX into a configurable Ring Buffer, with interrupts
 * Print strings directly to the UART, with or without newlines
 * Configurable Word Length, Stopbits, and parity on init
 
-See `lib_uart.h` for configuration flags
+**NOTE:** All configuration flags are in `funconfig.h`  
+If no configuration flags are used, the following configuration will be used:
+```
 
-## How to use
-Simply add `lib_uart.h` and `lib_uart.c` to your project files, `#include "lib_uart.h"`.  
-See `/testing/uarttest.c` for a basic usage example of the library
+```
+
+See `/testing/uart_test.c` for a basic usage example of the library.
+
+## TODO
+* TX Ring buffer & interrupt method
 
 ----
 Copyright (c) 2024 ADBeta
