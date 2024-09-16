@@ -46,16 +46,7 @@
 
 /*** Macro Functions *********************************************************/
 
-/*** Typedefs and structures *************************************************/
-/// @breif UART Ring Buffer Struct. Not user-modifyable. Only used internally
-typedef struct {
-	uint8_t        *buffer;
-	uint32_t       head;
-	uint32_t       tail;
-	const uint32_t mask;
-} _uart_buffer_t;
-
-
+/*** Typedefs and defines  ***************************************************/
 /// @brief UART Error Values
 typedef enum {
 	UART_OK              = 0,
@@ -106,9 +97,32 @@ typedef enum {
 } uart_stopbits_t;
 
 
-// TODO: Flow Control Bits selection
+/// @brief UART Flow Control Masks
+/// Bits in USART1->CTLR3
+#define UART_CTS_MASK ((uint16_t)0x0200)
+#define UART_RTS_MASK ((uint16_t)0x0100)
 
 
+/// @brief UART Ring Buffer Struct. Not user-modifyable. Only used internally
+typedef struct {
+	uint8_t        *buffer;
+	uint32_t       size;
+	uint32_t       head;
+	uint32_t       tail;
+	const uint32_t mask;
+} _uart_buffer_t;
+
+
+/// @brief UART Configuration Struct
+typedef struct {
+	uart_baudrate_t   baud;
+	uart_wordlength_t wordlength;
+	uart_parity_t     parity;
+	uart_stopbits_t   stopbits;
+	// TODO: BREAK Bit?
+	bool              cts;
+	bool              rts;
+} uart_config_t;
 
 
 /*** Initialisers ************************************************************/
@@ -153,13 +167,13 @@ uart_err_t uart_println(const char *string);
 /// @return size_t number of bytes read
 size_t uart_read(uint8_t *buffer, size_t len);
 
+/*
 /// @brief reads from the RX Ring Buffer until it finds a newline delimiter
 /// (\n or \r) then a non-delim char, or until it has read -len- bytes.
 /// Ring Buffer method is only enabled when RING_BUFFER_ENABLE is defined.
 /// @param *buffer, the buffer to read to
 /// @param len, the maximum number of bytes to read to the buffer
 /// @return size_t number of bytes read
-/*
 size_t uart_readln(uint8_t *buffer, size_t len)
 {
 }

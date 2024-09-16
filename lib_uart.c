@@ -30,7 +30,7 @@
 #include <stddef.h>
 
 /*** Static Variables ********************************************************/
-_uart_buffer_t _rx_buffer = {NULL, 0,0,0};
+_uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
 //_uart_buffer_t
 
 /*** IRQ Handler for UART ****************************************************/
@@ -73,14 +73,20 @@ void USART1_IRQHandler(void)
 
 /*** Initialiser *************************************************************/
 void uart_init(
-	const uart_buffer_t *rx_buffer,
-	const uart_baudrate_t baud,
-	const uart_wordlength_t wordlength,
-	const uart_parity_t parity,
-	const uart_stopbits_t stopbits)
+	const uint8_t *rx_buffer_ptr,
+	const uint32_t rx_buffer_size,
+	const uart_config_t *conf)
 {
-	// TODO: Set up rx buffer
+	// Make sure the buffer is a Power of 2 in size
+	// TODO: Also return
 
+	// Set up the RX Ring buffer Variables
+	_uart_rx_buffer.buffer = rx_buffer_ptr;
+	_uart_rx_buffer.size   = rx_buffer_size;
+	_uart_rx_buffer.head   = 0;
+	_uart_rx_buffer.tail   = 0;
+	_uart_rx_buffer.mask   = rx_buffer_size - 1;
+	
 
 	// Enable UART1 Clock
 	RCC->APB2PCENR |= RCC_APB2Periph_USART1;
@@ -93,21 +99,20 @@ void uart_init(
 	GPIOD->CFGLR |= (GPIO_CNF_IN_FLOATING << (4*6));                  // PD6 RX
 	
 	// Set CTLR1 Register (Enable RX & TX, set Word Length and Parity)
-	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | wordlength | parity;
+	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | conf->wordlength | conf->parity;
 	// Set CTLR2 Register (Stopbits)
-	USART1->CTLR2 = stopbits;
-	// Set CTLR3 Register TODO: Interrupts and flow control
-	USART1->CTLR3 = (uint16_t)0x0000;
+	USART1->CTLR2 = conf->stopbits;
+	// Set CTLR3 Register
+	if(conf->cts) USART1->CTLR3 |= UART_CTS_MASK;
+	if(conf->rts) USART1->CTLR3 |= UART_RTS_MASK;
 
 	// Set the Baudrate, assuming 48KHz
-	USART1->BRR = baud;
+	USART1->BRR = conf->baud;
 
-	// If the Ring Buffer is enabled, enable the UART RXNE Interrupt
-	#ifdef RING_BUFFER_ENABLE
+	// Enable the UART RXNE Interrupt
 	USART1->CTLR1 |= USART_CTLR1_RXNEIE;
 	NVIC_EnableIRQ(USART1_IRQn);
-	#endif
-
+	
 	// Enable the UART
 	USART1->CTLR1 |= CTLR1_UE_Set;
 }
