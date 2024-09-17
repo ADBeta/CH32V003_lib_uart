@@ -42,9 +42,8 @@ _uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
 void USART1_IRQHandler(void) __attribute__((interrupt));
 void USART1_IRQHandler(void)
 {
-	if(USART1->STATR & USART_RXNE) 
+	if(USART1->STATR & USART_STATR_RXNE) 
 	{
-		// TODO: Only if receiver interrput
 		// Read from the DATAR Register to reset the flag
 		uint8_t recv = (uint8_t)USART1->DATAR;
 
@@ -90,15 +89,16 @@ void uart_init(
 
 	// Enable UART1 Clock
 	RCC->APB2PCENR |= RCC_APB2Periph_USART1;
+	// Enable the UART GPIO Port, and the Alternate Function IO Flag
+	RCC->APB2PCENR |= UART_PORT_RCC | RCC_APB2Periph_AFIO;
 
-	// TODO: GPIOD port clock enable
+	// Set the RX and TX Pins.    RX INPUT_FLOATING, TX 10MHz PP AF
+	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_TX));
+	UART_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_OD_AF) << (4 * UART_PIN_TX);	
+	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_RX));
+	UART_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_IN_FLOATING) << (4 * UART_PIN_RX);
 
-	// Set the RX and TX Pins on PORTD. RX INPUT_FLOATING, TX 10MHz PP AF
-	GPIOD->CFGLR &= ~((0x0F << (4*6)) | (0x0F << (4*5)));  // Clear PD6 & PD5
-	GPIOD->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4*5); // PD5 TX
-	GPIOD->CFGLR |= (GPIO_CNF_IN_FLOATING << (4*6));                  // PD6 RX
-	
-	// Set CTLR1 Register (Enable RX & TX, set Word Length and Parity)
+	// Set CTLR1 Register (Enable RX & TX, set Worhummusd Length and Parity)
 	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | conf->wordlength | conf->parity;
 	// Set CTLR2 Register (Stopbits)
 	USART1->CTLR2 = conf->stopbits;

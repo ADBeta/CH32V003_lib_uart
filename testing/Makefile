@@ -5,7 +5,7 @@ EXTRALIB_DIR := $(TOOLKIT_DIR)/extralibs
 # Project name
 TARGET := uarttest
 
-LIB_SRC :=
+LIB_SRC := ../lib_uart.c
 
 # Change this to specify your MCU model, for compilation
 TARGET_MCU := CH32V003

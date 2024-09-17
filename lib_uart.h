@@ -31,6 +31,7 @@
 
 #include "ch32v003fun.h"
 #include <stddef.h>
+#include <stdbool.h>
 
 /*** Configuration Flags *****************************************************/
 // TODO: Move to funconfig.h
@@ -39,14 +40,24 @@
 // Disabled: Incomming data will not be added to the buffer until space is free
 #define RX_RING_BUFFER_OVERWRITE
 
-
-
+#define UART_PINOUT_DEFAULT
 
 
 
 /*** Macro Functions *********************************************************/
 
 /*** Typedefs and defines  ***************************************************/
+// Default Pinout Variables
+#ifdef UART_PINOUT_DEFAULT
+	#define I2C_AFIO_REG    ((uint32_t)0x00000000)
+	#define UART_PORT_RCC   RCC_APB2Periph_GPIOD
+	#define UART_PORT       GPIOD
+	#define UART_PIN_TX     5
+	#define UART_PIN_RX     6
+#endif
+
+
+
 /// @brief UART Error Values
 typedef enum {
 	UART_OK              = 0,
@@ -105,11 +116,11 @@ typedef enum {
 
 /// @brief UART Ring Buffer Struct. Not user-modifyable. Only used internally
 typedef struct {
-	uint8_t        *buffer;
-	uint32_t       size;
-	uint32_t       head;
-	uint32_t       tail;
-	const uint32_t mask;
+	uint8_t   *buffer;
+	uint32_t  size;
+	uint32_t  head;
+	uint32_t  tail;
+	uint32_t  mask;
 } _uart_buffer_t;
 
 
