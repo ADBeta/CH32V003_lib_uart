@@ -34,7 +34,6 @@ _uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
 //_uart_buffer_t
 
 /*** IRQ Handler for UART ****************************************************/
-/// TODO: 
 /// @brief UART Receiver Interrupt handler - Puts the data received into the
 /// UART Ring Buffer
 /// @param None
@@ -48,15 +47,15 @@ void USART1_IRQHandler(void)
 		uint8_t recv = (uint8_t)USART1->DATAR;
 
 		// Calculate the next write position
-		size_t next_head = (uart_ring_head + 1) & uart_ring_mask;
+		size_t next_head = (_uart_rx_buffer.head + 1) & _uart_rx_buffer.mask;
 
 		// If the next position is the same as the tail, either reject the new data
 		// or overwrite old data
-		if(next_head == uart_ring_tail) 
+		if(next_head == _uart_rx_buffer.tail) 
 		{
 			#ifdef RING_BUFFER_OVERWRITE
 				// Increment the tail position
-				uart_ring_tail = (uart_ring_tail + 1) & uart_ring_mask;
+				 _uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
 			#else
 				// Reject any data that overfills the buffer
 				return;
@@ -64,23 +63,22 @@ void USART1_IRQHandler(void)
 		}
 
 		// Add the received data to the current head position
-		uart_ring_buff[uart_ring_head] = recv;
+		_uart_rx_buffer.buffer[_uart_rx_buffer.head] = recv;
 		// Update the head position
-		uart_ring_head = next_head;
+		_uart_rx_buffer.head = next_head;
 	}
 }
 
 /*** Initialiser *************************************************************/
-void uart_init(
-	const uint8_t *rx_buffer_ptr,
-	const uint32_t rx_buffer_size,
-	const uart_config_t *conf)
+void uart_init(	const uint8_t *rx_buffer_ptr,
+			    const uint32_t rx_buffer_size,
+			    const uart_config_t *conf     )
 {
 	// Make sure the buffer is a Power of 2 in size
 	// TODO: Also return
 
 	// Set up the RX Ring buffer Variables
-	_uart_rx_buffer.buffer = rx_buffer_ptr;
+	_uart_rx_buffer.buffer = (uint8_t *)rx_buffer_ptr;
 	_uart_rx_buffer.size   = rx_buffer_size;
 	_uart_rx_buffer.head   = 0;
 	_uart_rx_buffer.tail   = 0;
@@ -107,7 +105,7 @@ void uart_init(
 	if(conf->rts) USART1->CTLR3 |= UART_RTS_MASK;
 
 	// Set the Baudrate, assuming 48KHz
-	USART1->BRR = conf->baud;
+	USART1->BRR = conf->baudrate;
 
 	// Enable the UART RXNE Interrupt
 	USART1->CTLR1 |= USART_CTLR1_RXNEIE;
@@ -164,7 +162,7 @@ uart_err_t uart_println(const char *string)
 	// Catches NULL input also
 	uart_err_t ret_err = uart_print(string);
 	
-	if(ret_err == UART_OK);
+	if(ret_err == UART_OK)
 	{
 		// Print the terminating characters
 		while(!(USART1->STATR & USART_FLAG_TC));
@@ -187,14 +185,13 @@ size_t uart_read(uint8_t *buffer, size_t len)
 	{
 		while(len--)
 		{
-			// TODO: convert to new buffer method
 			// If the buffer has no more data, return how many bytes were read
-			if(uart_ring_head == uart_ring_tail) break; 
+			if(_uart_rx_buffer.head == _uart_rx_buffer.tail) break; 
 		
 			// Add the current tail byte to the buffer
-			*buffer++ = uart_ring_buff[uart_ring_tail];
+			*buffer++ = _uart_rx_buffer.buffer[_uart_rx_buffer.tail];
 			// Increment the ring buffer tail position
-			uart_ring_tail = (uart_ring_tail + 1) & uart_ring_mask;
+			_uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
 			// Increment the count of bytes
 			bytes_read++;
 		}

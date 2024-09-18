@@ -57,7 +57,6 @@
 #endif
 
 
-
 /// @brief UART Error Values
 typedef enum {
 	UART_OK              = 0,
@@ -114,6 +113,18 @@ typedef enum {
 #define UART_RTS_MASK ((uint16_t)0x0100)
 
 
+/// @brief UART Configuration Struct
+typedef struct {
+	uart_baudrate_t   baudrate;
+	uart_wordlength_t wordlength;
+	uart_parity_t     parity;
+	uart_stopbits_t   stopbits;
+	// TODO: BREAK Bit?
+	bool              cts;
+	bool              rts;
+} uart_config_t;
+
+
 /// @brief UART Ring Buffer Struct. Not user-modifyable. Only used internally
 typedef struct {
 	uint8_t   *buffer;
@@ -122,18 +133,6 @@ typedef struct {
 	uint32_t  tail;
 	uint32_t  mask;
 } _uart_buffer_t;
-
-
-/// @brief UART Configuration Struct
-typedef struct {
-	uart_baudrate_t   baud;
-	uart_wordlength_t wordlength;
-	uart_parity_t     parity;
-	uart_stopbits_t   stopbits;
-	// TODO: BREAK Bit?
-	bool              cts;
-	bool              rts;
-} uart_config_t;
 
 
 /*** Initialisers ************************************************************/
@@ -145,11 +144,9 @@ typedef struct {
 /// @param parity, Parity variable (None, Even or Odd)
 /// @param stopbits, how many stop bits to transmit (0.5, 1, 2, 1.5)
 /// @return None 
-void uart_init(
-			   const uart_baudrate_t baud,
-			   const uart_wordlength_t wordlength,
-			   const uart_parity_t parity,
-			   const uart_stopbits_t stopbits
+void uart_init( const uint8_t *rx_buffer_ptr,
+			    const uint32_t rx_buffer_size,
+			    const uart_config_t *conf    
 );
 
 

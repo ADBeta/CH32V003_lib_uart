@@ -9,20 +9,28 @@
 #include <string.h>
 #include <stdio.h>
 
-// The internal ring buffer is 128 bytes by default. See `lib_uart.h` to adjust
-// this value and change other settings.
-char uart_buffer[128] = {0};
+// The UART RX Ring Buffer (Must be > 0. Must be a Power of 2)
+char uart_rx_buffer[128] = {0};
 
 int main()
 {
 	SystemInit();
 
+
+	uart_config_t uart_config = {
+		.baudrate    = UART_BAUD_115200,
+		.wordlength  = UART_WORDLENGTH_8,
+		.parity      = UART_PARITY_NONE,
+		.stopbits    = UART_STOPBITS_ONE,
+		.cts         = false,
+		.rts         = false,
+	};
+
 	// Init the UART system. See `lib_uart.h` for baud, and other config vars
 	uart_init(
-		UART_BAUD_115200,
-		UART_WORDLENGTH_8, 
-		UART_PARITY_NONE,
-		UART_STOPBITS_ONE
+		(uint8_t *)uart_rx_buffer,
+		128,
+		&uart_config
 	);
 
 	// Simple string printing example
@@ -33,11 +41,11 @@ int main()
 	while(1)
 	{
 		// Clear the read buffer
-		memset(uart_buffer, 0x00, 128);
+		memset(uart_rx_buffer, 0x00, 128);
 
 		// Read up to 128 bytes into the UART Buffer.
 		// Returns the number of bytes actualy read
-		size_t bytes_read = uart_read((uint8_t *)uart_buffer, 128);
+		size_t bytes_read = uart_read((uint8_t *)uart_rx_buffer, 128);
 
 		// Only print/modify data if there was some read
 		if(bytes_read != 0)
@@ -47,11 +55,11 @@ int main()
 			// type normally and have newlines
 			for(uint8_t chr = 0; chr < 127; chr++)
 			{
-				if(uart_buffer[chr] == '\r') uart_buffer[chr + 1] = '\n';
+				if(uart_rx_buffer[chr] == '\r') uart_rx_buffer[chr + 1] = '\n';
 			}
 
 			// Write the number of bytes read to the UART
-			uart_write((uint8_t *)uart_buffer, 128);
+			uart_write((uint8_t *)uart_rx_buffer, 128);
 		}
 	}  
 	
