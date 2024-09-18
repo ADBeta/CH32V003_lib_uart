@@ -4,7 +4,7 @@
 * See GitHub for more information: 
 * https://github.com/ADBeta/CH32V003_lib_uart
 * 
-* 14 Sep 2024	Version 4.3
+* 18 Sep 2024	Version 4.5
 *
 * Released under the MIT Licence
 * Copyright ADBeta (c) 2024
