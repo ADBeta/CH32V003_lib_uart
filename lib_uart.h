@@ -138,7 +138,7 @@ typedef struct {
 /*** Initialisers ************************************************************/
 /// @brief Initiliase the UART peripheral with the passed configuratiion.
 ///
-///
+/// TODO:
 /// @param baud, buadrate of the interface (921600 - 1200)
 /// @param wordlength, interface word length (8 or 9 bits)
 /// @param parity, Parity variable (None, Even or Odd)

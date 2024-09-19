@@ -29,6 +29,8 @@
 #include "ch32v003fun.h"
 #include <stddef.h>
 
+#include <stdio.h>
+
 /*** Static Variables ********************************************************/
 _uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
 //_uart_buffer_t
@@ -41,8 +43,9 @@ _uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
 void USART1_IRQHandler(void) __attribute__((interrupt));
 void USART1_IRQHandler(void)
 {
-	if(USART1->STATR & USART_STATR_RXNE) 
-	{
+	//if(USART1->STATR & USART_STATR_RXNE) 
+	//{
+
 		// Read from the DATAR Register to reset the flag
 		uint8_t recv = (uint8_t)USART1->DATAR;
 
@@ -53,7 +56,7 @@ void USART1_IRQHandler(void)
 		// or overwrite old data
 		if(next_head == _uart_rx_buffer.tail) 
 		{
-			#ifdef RING_BUFFER_OVERWRITE
+			#ifdef RX_RING_BUFFER_OVERWRITE
 				// Increment the tail position
 				 _uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
 			#else
@@ -66,7 +69,7 @@ void USART1_IRQHandler(void)
 		_uart_rx_buffer.buffer[_uart_rx_buffer.head] = recv;
 		// Update the head position
 		_uart_rx_buffer.head = next_head;
-	}
+	//}
 }
 
 /*** Initialiser *************************************************************/
@@ -83,18 +86,20 @@ void uart_init(	const uint8_t *rx_buffer_ptr,
 	_uart_rx_buffer.head   = 0;
 	_uart_rx_buffer.tail   = 0;
 	_uart_rx_buffer.mask   = rx_buffer_size - 1;
-	
 
 	// Enable UART1 Clock
 	RCC->APB2PCENR |= RCC_APB2Periph_USART1;
 	// Enable the UART GPIO Port, and the Alternate Function IO Flag
 	RCC->APB2PCENR |= UART_PORT_RCC | RCC_APB2Periph_AFIO;
 
-	// Set the RX and TX Pins.    RX INPUT_FLOATING, TX 10MHz PP AF
+	// TODO: RTS CTS pins if set
+	// Set up the GPIO Pins for UART
+	// TX 10MHz PP AF
+	// RX INPUT_FLOATING
 	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_TX));
-	UART_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_OD_AF) << (4 * UART_PIN_TX);	
+	UART_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4 * UART_PIN_TX);	
 	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_RX));
-	UART_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_IN_FLOATING) << (4 * UART_PIN_RX);
+	UART_PORT->CFGLR |= GPIO_CNF_IN_FLOATING << (4 * UART_PIN_RX);
 
 	// Set CTLR1 Register (Enable RX & TX, set Worhummusd Length and Parity)
 	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | conf->wordlength | conf->parity;
@@ -122,9 +127,9 @@ uart_err_t uart_write(const void *buffer, size_t size)
 	
 	if(buffer != NULL && size != 0) 
 	{
+		// TODO: Set ret to not finished
 		// Cast the input to a uint8_t
 		const uint8_t *bytes = (const uint8_t *)buffer;
-		// Send each byte
 		while(size--)
 		{
 			// Wait for the current transmission to finish
@@ -144,6 +149,7 @@ uart_err_t uart_print(const char *string)
 
 	if(string != NULL)
 	{
+		// TODO: Set ret to not finished
 		while(*string != '\0')
 		{
 			// Wait for the current transmission to finish
@@ -187,7 +193,7 @@ size_t uart_read(uint8_t *buffer, size_t len)
 		{
 			// If the buffer has no more data, return how many bytes were read
 			if(_uart_rx_buffer.head == _uart_rx_buffer.tail) break; 
-		
+	
 			// Add the current tail byte to the buffer
 			*buffer++ = _uart_rx_buffer.buffer[_uart_rx_buffer.tail];
 			// Increment the ring buffer tail position
