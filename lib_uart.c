@@ -29,11 +29,9 @@
 #include "ch32v003fun.h"
 #include <stddef.h>
 
-#include <stdio.h>
-
 /*** Static Variables ********************************************************/
-_uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
-//_uart_buffer_t
+static _uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
+
 
 /*** IRQ Handler for UART ****************************************************/
 /// @brief UART Receiver Interrupt handler - Puts the data received into the
@@ -43,9 +41,8 @@ _uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
 void USART1_IRQHandler(void) __attribute__((interrupt));
 void USART1_IRQHandler(void)
 {
-	//if(USART1->STATR & USART_STATR_RXNE) 
-	//{
-
+	if(USART1->STATR & USART_STATR_RXNE) 
+	{
 		// Read from the DATAR Register to reset the flag
 		uint8_t recv = (uint8_t)USART1->DATAR;
 
@@ -69,11 +66,11 @@ void USART1_IRQHandler(void)
 		_uart_rx_buffer.buffer[_uart_rx_buffer.head] = recv;
 		// Update the head position
 		_uart_rx_buffer.head = next_head;
-	//}
+	}
 }
 
 /*** Initialiser *************************************************************/
-void uart_init(	const uint8_t *rx_buffer_ptr,
+void uart_init(	uint8_t *rx_buffer_ptr,
 			    const uint32_t rx_buffer_size,
 			    const uart_config_t *conf     )
 {
@@ -81,12 +78,12 @@ void uart_init(	const uint8_t *rx_buffer_ptr,
 	// TODO: Also return
 
 	// Set up the RX Ring buffer Variables
-	_uart_rx_buffer.buffer = (uint8_t *)rx_buffer_ptr;
+	_uart_rx_buffer.buffer = rx_buffer_ptr;
 	_uart_rx_buffer.size   = rx_buffer_size;
+	_uart_rx_buffer.mask   = rx_buffer_size - 1;
 	_uart_rx_buffer.head   = 0;
 	_uart_rx_buffer.tail   = 0;
-	_uart_rx_buffer.mask   = rx_buffer_size - 1;
-
+	
 	// Enable UART1 Clock
 	RCC->APB2PCENR |= RCC_APB2Periph_USART1;
 	// Enable the UART GPIO Port, and the Alternate Function IO Flag
@@ -106,9 +103,9 @@ void uart_init(	const uint8_t *rx_buffer_ptr,
 	// Set CTLR2 Register (Stopbits)
 	USART1->CTLR2 = conf->stopbits;
 	// Set CTLR3 Register
+	USART1->CTLR3 = (uint16_t)0x0000;
 	if(conf->cts) USART1->CTLR3 |= UART_CTS_MASK;
 	if(conf->rts) USART1->CTLR3 |= UART_RTS_MASK;
-
 	// Set the Baudrate, assuming 48KHz
 	USART1->BRR = conf->baudrate;
 
@@ -198,6 +195,7 @@ size_t uart_read(uint8_t *buffer, size_t len)
 			*buffer++ = _uart_rx_buffer.buffer[_uart_rx_buffer.tail];
 			// Increment the ring buffer tail position
 			_uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
+
 			// Increment the count of bytes
 			bytes_read++;
 		}

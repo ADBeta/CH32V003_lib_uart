@@ -9,9 +9,11 @@
 #include <string.h>
 #include <stdio.h>
 
+#define UART_BUFFER_SIZE 128
+
 // The UART RX Ring Buffer (Must be > 0. Must be a Power of 2)
-uint8_t buff[32] = {0};
-uint8_t uart_rx_buffer[32] = {0x00};
+uint8_t buff[UART_BUFFER_SIZE] = {0};
+uint8_t uart_rx_buffer[UART_BUFFER_SIZE] = {0x00};
 
 int main()
 {
@@ -30,7 +32,7 @@ int main()
 	// Init the UART system. See `lib_uart.h` for baud, and other config vars
 	uart_init(
 		uart_rx_buffer,
-		32,
+		UART_BUFFER_SIZE,
 		&uart_conf
 	);
 
@@ -42,35 +44,27 @@ int main()
 	while(1)
 	{
 		// Clear the read buffer
-		//memset(buff, 0x00, 32);
+		memset(buff, 0x00, UART_BUFFER_SIZE);
 
 		// Read up to 128 bytes into the UART Buffer.
 		// Returns the number of bytes actualy read
-		size_t bytes_read = uart_read(buff, 32);
+		size_t bytes_read = uart_read(buff, UART_BUFFER_SIZE);
 
-
-		if(bytes_read != 0)
-		{
-			//uart_write(buff, bytes_read);
-		}
-		Delay_Ms(100);
-
-		/*
+		
 		// Only print/modify data if there was some read
 		if(bytes_read != 0)
 		{
 			// Replace any \r with \r\n.
 			// NOTE: This WILL corrupt data. It is only to allow the user to 
 			// type normally and have newlines
-			//for(uint8_t chr = 0; chr < 127; chr++)
-			//{
-			//	if(buff[chr] == '\r') buff[chr + 1] = '\n';
-			//}
+			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE-1; chr++)
+			{
+				if(buff[chr] == '\r') buff[chr + 1] = '\n';
+			}
 
 			// Write the number of bytes read to the UART
-			uart_write((uint8_t *)buff, 128);
+			uart_write((uint8_t *)buff, UART_BUFFER_SIZE);
 		}
-		*/
 	}
 	
 }

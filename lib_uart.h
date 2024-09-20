@@ -129,9 +129,9 @@ typedef struct {
 typedef struct {
 	uint8_t   *buffer;
 	uint32_t  size;
-	uint32_t  head;
-	uint32_t  tail;
 	uint32_t  mask;
+	volatile uint32_t  head;
+	volatile uint32_t  tail;
 } _uart_buffer_t;
 
 
@@ -144,7 +144,7 @@ typedef struct {
 /// @param parity, Parity variable (None, Even or Odd)
 /// @param stopbits, how many stop bits to transmit (0.5, 1, 2, 1.5)
 /// @return None 
-void uart_init( const uint8_t *rx_buffer_ptr,
+void uart_init( uint8_t *rx_buffer_ptr,
 			    const uint32_t rx_buffer_size,
 			    const uart_config_t *conf    
 );
