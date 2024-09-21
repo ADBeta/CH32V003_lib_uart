@@ -5,494 +5,579 @@ uarttest.elf:     file format elf32-littleriscv
 Disassembly of section .init:
 
 00000000 <InterruptVector>:
-   0:	0f20006f          	j	f2 <handle_reset>
+   0:	17a0006f          	j	17a <handle_reset>
    4:	00000000          	.word	0x00000000
-   8:	0000016a          	.word	0x0000016a
-   c:	00000168          	.word	0x00000168
+   8:	000001f2          	.word	0x000001f2
+   c:	000001f0          	.word	0x000001f0
 	...
-  30:	00000168          	.word	0x00000168
+  30:	000001f0          	.word	0x000001f0
   34:	00000000          	.word	0x00000000
-  38:	00000168          	.word	0x00000168
+  38:	000001f0          	.word	0x000001f0
   3c:	00000000          	.word	0x00000000
-  40:	00000168          	.word	0x00000168
-  44:	00000168          	.word	0x00000168
-  48:	00000168          	.word	0x00000168
-  4c:	00000168          	.word	0x00000168
-  50:	00000168          	.word	0x00000168
-  54:	00000168          	.word	0x00000168
-  58:	00000168          	.word	0x00000168
-  5c:	00000168          	.word	0x00000168
-  60:	00000168          	.word	0x00000168
-  64:	00000168          	.word	0x00000168
-  68:	00000168          	.word	0x00000168
-  6c:	00000168          	.word	0x00000168
-  70:	00000168          	.word	0x00000168
-  74:	00000168          	.word	0x00000168
-  78:	00000168          	.word	0x00000168
-  7c:	00000168          	.word	0x00000168
-  80:	00000368          	.word	0x00000368
-  84:	00000168          	.word	0x00000168
-  88:	00000168          	.word	0x00000168
-  8c:	00000168          	.word	0x00000168
-  90:	00000168          	.word	0x00000168
-  94:	00000168          	.word	0x00000168
-  98:	00000168          	.word	0x00000168
+  40:	000001f0          	.word	0x000001f0
+  44:	000001f0          	.word	0x000001f0
+  48:	000001f0          	.word	0x000001f0
+  4c:	000001f0          	.word	0x000001f0
+  50:	000001f0          	.word	0x000001f0
+  54:	000001f0          	.word	0x000001f0
+  58:	000001f0          	.word	0x000001f0
+  5c:	000001f0          	.word	0x000001f0
+  60:	000001f0          	.word	0x000001f0
+  64:	000001f0          	.word	0x000001f0
+  68:	000001f0          	.word	0x000001f0
+  6c:	000001f0          	.word	0x000001f0
+  70:	000001f0          	.word	0x000001f0
+  74:	000001f0          	.word	0x000001f0
+  78:	000001f0          	.word	0x000001f0
+  7c:	000001f0          	.word	0x000001f0
+  80:	000003d6          	.word	0x000003d6
+  84:	000001f0          	.word	0x000001f0
+  88:	000001f0          	.word	0x000001f0
+  8c:	000001f0          	.word	0x000001f0
+  90:	000001f0          	.word	0x000001f0
+  94:	000001f0          	.word	0x000001f0
+  98:	000001f0          	.word	0x000001f0
   9c:	0000                	.insn	2, 0x
 	...
 
 Disassembly of section .text:
 
-000000a0 <uart_println.isra.0>:
-	{
-		// TODO: Set ret to not finished
-		while(*string != '\0')
-		{
-			// Wait for the current transmission to finish
-			while(!(USART1->STATR & USART_FLAG_TC));
-  a0:	400147b7          	lui	a5,0x40014
-  a4:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
-		while(*string != '\0')
-  a8:	00054683          	lbu	a3,0(a0)
-  ac:	ea95                	bnez	a3,e0 <uart_println.isra.0+0x40>
-	uart_err_t ret_err = uart_print(string);
+000000a0 <__divsi3>:
+  a0:	02054e63          	bltz	a0,dc <__umodsi3+0x8>
+  a4:	0405c363          	bltz	a1,ea <__umodsi3+0x16>
+
+000000a8 <__hidden___udivsi3>:
+  a8:	862e                	mv	a2,a1
+  aa:	85aa                	mv	a1,a0
+  ac:	557d                	li	a0,-1
+  ae:	c215                	beqz	a2,d2 <__hidden___udivsi3+0x2a>
+  b0:	4685                	li	a3,1
+  b2:	00b67863          	bgeu	a2,a1,c2 <__hidden___udivsi3+0x1a>
+  b6:	00c05663          	blez	a2,c2 <__hidden___udivsi3+0x1a>
+  ba:	0606                	slli	a2,a2,0x1
+  bc:	0686                	slli	a3,a3,0x1
+  be:	feb66ce3          	bltu	a2,a1,b6 <__hidden___udivsi3+0xe>
+  c2:	4501                	li	a0,0
+  c4:	00c5e463          	bltu	a1,a2,cc <__hidden___udivsi3+0x24>
+  c8:	8d91                	sub	a1,a1,a2
+  ca:	8d55                	or	a0,a0,a3
+  cc:	8285                	srli	a3,a3,0x1
+  ce:	8205                	srli	a2,a2,0x1
+  d0:	faf5                	bnez	a3,c4 <__hidden___udivsi3+0x1c>
+  d2:	8082                	ret
+
+000000d4 <__umodsi3>:
+  d4:	8286                	mv	t0,ra
+  d6:	3fc9                	jal	a8 <__hidden___udivsi3>
+  d8:	852e                	mv	a0,a1
+  da:	8282                	jr	t0
+  dc:	40a00533          	neg	a0,a0
+  e0:	00b04763          	bgtz	a1,ee <__umodsi3+0x1a>
+  e4:	40b005b3          	neg	a1,a1
+  e8:	b7c1                	j	a8 <__hidden___udivsi3>
+  ea:	40b005b3          	neg	a1,a1
+  ee:	8286                	mv	t0,ra
+  f0:	3f65                	jal	a8 <__hidden___udivsi3>
+  f2:	40a00533          	neg	a0,a0
+  f6:	8282                	jr	t0
+
+000000f8 <__modsi3>:
+  f8:	8286                	mv	t0,ra
+  fa:	0005c763          	bltz	a1,108 <__modsi3+0x10>
+  fe:	00054963          	bltz	a0,110 <__modsi3+0x18>
+ 102:	375d                	jal	a8 <__hidden___udivsi3>
+ 104:	852e                	mv	a0,a1
+ 106:	8282                	jr	t0
+ 108:	40b005b3          	neg	a1,a1
+ 10c:	fe055be3          	bgez	a0,102 <__modsi3+0xa>
+ 110:	40a00533          	neg	a0,a0
+ 114:	3f51                	jal	a8 <__hidden___udivsi3>
+ 116:	40b00533          	neg	a0,a1
+ 11a:	8282                	jr	t0
+	...
+
+0000011e <uart_println.isra.0>:
+}
+
+
+uart_err_t uart_print(const char *string)
+{
+	if(!_uart_init_ok) return UART_NOT_INITIALIZED;
+ 11e:	200007b7          	lui	a5,0x20000
+ 122:	0007c703          	lbu	a4,0(a5) # 20000000 <_uart_init_ok>
+	if(string == NULL) return UART_INVALID_ARGS;
 	
+	while(*string != '\0')
+	{
+		// Wait for the current transmission to finish
+		while(!(USART1->STATR & USART_FLAG_TC));
+ 126:	400147b7          	lui	a5,0x40014
+ 12a:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
+	if(!_uart_init_ok) return UART_NOT_INITIALIZED;
+ 12e:	eb11                	bnez	a4,142 <uart_println.isra.0+0x24>
+ 130:	8082                	ret
+		while(!(USART1->STATR & USART_FLAG_TC));
+ 132:	0007d703          	lhu	a4,0(a5)
+ 136:	04077713          	andi	a4,a4,64
+ 13a:	df65                	beqz	a4,132 <uart_println.isra.0+0x14>
+		USART1->DATAR = *string++;
+ 13c:	0505                	addi	a0,a0,1
+ 13e:	00d79223          	sh	a3,4(a5)
+	while(*string != '\0')
+ 142:	00054683          	lbu	a3,0(a0)
+ 146:	f6f5                	bnez	a3,132 <uart_println.isra.0+0x14>
+	
+	// If input was valid & sent, send \r\n
 	if(ret_err == UART_OK)
 	{
 		// Print the terminating characters
 		while(!(USART1->STATR & USART_FLAG_TC));
-  ae:	400147b7          	lui	a5,0x40014
-  b2:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
-  b6:	0007d703          	lhu	a4,0(a5)
-  ba:	04077713          	andi	a4,a4,64
-  be:	df65                	beqz	a4,b6 <uart_println.isra.0+0x16>
+ 148:	400147b7          	lui	a5,0x40014
+ 14c:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
+ 150:	0007d703          	lhu	a4,0(a5)
+ 154:	04077713          	andi	a4,a4,64
+ 158:	df65                	beqz	a4,150 <uart_println.isra.0+0x32>
 		USART1->DATAR = '\r';
-  c0:	4735                	li	a4,13
-  c2:	00e79223          	sh	a4,4(a5)
+ 15a:	4735                	li	a4,13
+ 15c:	00e79223          	sh	a4,4(a5)
 		while(!(USART1->STATR & USART_FLAG_TC));
-  c6:	400147b7          	lui	a5,0x40014
-  ca:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
-  ce:	0007d703          	lhu	a4,0(a5)
-  d2:	04077713          	andi	a4,a4,64
-  d6:	df65                	beqz	a4,ce <uart_println.isra.0+0x2e>
+ 160:	400147b7          	lui	a5,0x40014
+ 164:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
+ 168:	0007d703          	lhu	a4,0(a5)
+ 16c:	04077713          	andi	a4,a4,64
+ 170:	df65                	beqz	a4,168 <uart_println.isra.0+0x4a>
 		USART1->DATAR = '\n';
-  d8:	4729                	li	a4,10
-  da:	00e79223          	sh	a4,4(a5)
+ 172:	4729                	li	a4,10
+ 174:	00e79223          	sh	a4,4(a5)
 	}
 
 	return ret_err;
 }
-  de:	8082                	ret
-			while(!(USART1->STATR & USART_FLAG_TC));
-  e0:	0007d703          	lhu	a4,0(a5)
-  e4:	04077713          	andi	a4,a4,64
-  e8:	df65                	beqz	a4,e0 <uart_println.isra.0+0x40>
-			USART1->DATAR = *string++;
-  ea:	0505                	addi	a0,a0,1
-  ec:	00d79223          	sh	a3,4(a5)
-  f0:	bf65                	j	a8 <uart_println.isra.0+0x8>
+ 178:	8082                	ret
 
-000000f2 <handle_reset>:
-  f2:	20000197          	auipc	gp,0x20000
-  f6:	70e18193          	addi	gp,gp,1806 # 20000800 <__global_pointer$>
-  fa:	00018113          	mv	sp,gp
-  fe:	08000513          	li	a0,128
- 102:	30051073          	csrw	mstatus,a0
- 106:	468d                	li	a3,3
- 108:	00000517          	auipc	a0,0x0
- 10c:	ef850513          	addi	a0,a0,-264 # 0 <InterruptVector>
- 110:	8d55                	or	a0,a0,a3
- 112:	30551073          	csrw	mtvec,a0
- 116:	20000517          	auipc	a0,0x20000
- 11a:	eea50513          	addi	a0,a0,-278 # 20000000 <_uart_rx_buffer>
- 11e:	91418593          	addi	a1,gp,-1772 # 20000114 <_ebss>
- 122:	4601                	li	a2,0
- 124:	00b55663          	bge	a0,a1,130 <handle_reset+0x3e>
- 128:	c110                	sw	a2,0(a0)
- 12a:	0511                	addi	a0,a0,4
- 12c:	feb54ee3          	blt	a0,a1,128 <handle_reset+0x36>
- 130:	43c00513          	li	a0,1084
- 134:	20000597          	auipc	a1,0x20000
- 138:	ecc58593          	addi	a1,a1,-308 # 20000000 <_uart_rx_buffer>
- 13c:	20000617          	auipc	a2,0x20000
- 140:	ec460613          	addi	a2,a2,-316 # 20000000 <_uart_rx_buffer>
- 144:	00c58863          	beq	a1,a2,154 <handle_reset+0x62>
- 148:	4114                	lw	a3,0(a0)
- 14a:	c194                	sw	a3,0(a1)
- 14c:	0511                	addi	a0,a0,4
- 14e:	0591                	addi	a1,a1,4
- 150:	fec59ae3          	bne	a1,a2,144 <handle_reset+0x52>
- 154:	e000f7b7          	lui	a5,0xe000f
- 158:	4705                	li	a4,1
- 15a:	c398                	sw	a4,0(a5)
- 15c:	1ec00793          	li	a5,492
- 160:	34179073          	csrw	mepc,a5
- 164:	30200073          	mret
+0000017a <handle_reset>:
+ 17a:	20000197          	auipc	gp,0x20000
+ 17e:	68618193          	addi	gp,gp,1670 # 20000800 <__global_pointer$>
+ 182:	00018113          	mv	sp,gp
+ 186:	08000513          	li	a0,128
+ 18a:	30051073          	csrw	mstatus,a0
+ 18e:	468d                	li	a3,3
+ 190:	00000517          	auipc	a0,0x0
+ 194:	e7050513          	addi	a0,a0,-400 # 0 <InterruptVector>
+ 198:	8d55                	or	a0,a0,a3
+ 19a:	30551073          	csrw	mtvec,a0
+ 19e:	20000517          	auipc	a0,0x20000
+ 1a2:	e6250513          	addi	a0,a0,-414 # 20000000 <_uart_init_ok>
+ 1a6:	83418593          	addi	a1,gp,-1996 # 20000034 <_ebss>
+ 1aa:	4601                	li	a2,0
+ 1ac:	00b55663          	bge	a0,a1,1b8 <handle_reset+0x3e>
+ 1b0:	c110                	sw	a2,0(a0)
+ 1b2:	0511                	addi	a0,a0,4
+ 1b4:	feb54ee3          	blt	a0,a1,1b0 <handle_reset+0x36>
+ 1b8:	4d000513          	li	a0,1232
+ 1bc:	20000597          	auipc	a1,0x20000
+ 1c0:	e4458593          	addi	a1,a1,-444 # 20000000 <_uart_init_ok>
+ 1c4:	20000617          	auipc	a2,0x20000
+ 1c8:	e3c60613          	addi	a2,a2,-452 # 20000000 <_uart_init_ok>
+ 1cc:	00c58863          	beq	a1,a2,1dc <handle_reset+0x62>
+ 1d0:	4114                	lw	a3,0(a0)
+ 1d2:	c194                	sw	a3,0(a1)
+ 1d4:	0511                	addi	a0,a0,4
+ 1d6:	0591                	addi	a1,a1,4
+ 1d8:	fec59ae3          	bne	a1,a2,1cc <handle_reset+0x52>
+ 1dc:	e000f7b7          	lui	a5,0xe000f
+ 1e0:	4705                	li	a4,1
+ 1e2:	c398                	sw	a4,0(a5)
+ 1e4:	26200793          	li	a5,610
+ 1e8:	34179073          	csrw	mepc,a5
+ 1ec:	30200073          	mret
 
-00000168 <ADC1_IRQHandler>:
- 168:	a001                	j	168 <ADC1_IRQHandler>
+000001f0 <ADC1_IRQHandler>:
+ 1f0:	a001                	j	1f0 <ADC1_IRQHandler>
 
-0000016a <NMI_Handler>:
- 16a:	40021737          	lui	a4,0x40021
- 16e:	471c                	lw	a5,8(a4)
- 170:	008006b7          	lui	a3,0x800
- 174:	8fd5                	or	a5,a5,a3
- 176:	c71c                	sw	a5,8(a4)
+000001f2 <NMI_Handler>:
+ 1f2:	40021737          	lui	a4,0x40021
+ 1f6:	471c                	lw	a5,8(a4)
+ 1f8:	008006b7          	lui	a3,0x800
+ 1fc:	8fd5                	or	a5,a5,a3
+ 1fe:	c71c                	sw	a5,8(a4)
 
-00000178 <memset>:
- 178:	962a                	add	a2,a2,a0
- 17a:	87aa                	mv	a5,a0
- 17c:	00c79363          	bne	a5,a2,182 <memset+0xa>
- 180:	8082                	ret
- 182:	00b78023          	sb	a1,0(a5) # e000f000 <__global_pointer$+0xc000e800>
- 186:	0785                	addi	a5,a5,1
- 188:	bfd5                	j	17c <memset+0x4>
+00000200 <SystemInit>:
+ 200:	400227b7          	lui	a5,0x40022
+ 204:	4705                	li	a4,1
+ 206:	c398                	sw	a4,0(a5)
+ 208:	400217b7          	lui	a5,0x40021
+ 20c:	01080737          	lui	a4,0x1080
+ 210:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x20020804>
+ 214:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.b1eec444+0x107de13>
+ 218:	c398                	sw	a4,0(a5)
+ 21a:	009f0737          	lui	a4,0x9f0
+ 21e:	c798                	sw	a4,8(a5)
+ 220:	40021737          	lui	a4,0x40021
+ 224:	431c                	lw	a5,0(a4)
+ 226:	00679693          	slli	a3,a5,0x6
+ 22a:	fe06dde3          	bgez	a3,224 <SystemInit+0x24>
+ 22e:	435c                	lw	a5,4(a4)
+ 230:	400216b7          	lui	a3,0x40021
+ 234:	9bf1                	andi	a5,a5,-4
+ 236:	0027e793          	ori	a5,a5,2
+ 23a:	c35c                	sw	a5,4(a4)
+ 23c:	4721                	li	a4,8
+ 23e:	42dc                	lw	a5,4(a3)
+ 240:	8bb1                	andi	a5,a5,12
+ 242:	fee79ee3          	bne	a5,a4,23e <SystemInit+0x3e>
+ 246:	e00007b7          	lui	a5,0xe0000
+ 24a:	0f878793          	addi	a5,a5,248 # e00000f8 <__global_pointer$+0xbffff8f8>
+ 24e:	0007a023          	sw	zero,0(a5)
+ 252:	e00007b7          	lui	a5,0xe0000
+ 256:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8f4>
+ 25a:	08000713          	li	a4,128
+ 25e:	c398                	sw	a4,0(a5)
+ 260:	8082                	ret
 
-0000018a <SystemInit>:
- 18a:	400227b7          	lui	a5,0x40022
- 18e:	4705                	li	a4,1
- 190:	c398                	sw	a4,0(a5)
- 192:	400217b7          	lui	a5,0x40021
- 196:	01080737          	lui	a4,0x1080
- 19a:	0007a223          	sw	zero,4(a5) # 40021004 <__global_pointer$+0x20020804>
- 19e:	08170713          	addi	a4,a4,129 # 1080081 <lib_uart.c.2732690c+0x107de36>
- 1a2:	c398                	sw	a4,0(a5)
- 1a4:	009f0737          	lui	a4,0x9f0
- 1a8:	c798                	sw	a4,8(a5)
- 1aa:	40021737          	lui	a4,0x40021
- 1ae:	431c                	lw	a5,0(a4)
- 1b0:	00679693          	slli	a3,a5,0x6
- 1b4:	fe06dde3          	bgez	a3,1ae <SystemInit+0x24>
- 1b8:	435c                	lw	a5,4(a4)
- 1ba:	400216b7          	lui	a3,0x40021
- 1be:	9bf1                	andi	a5,a5,-4
- 1c0:	0027e793          	ori	a5,a5,2
- 1c4:	c35c                	sw	a5,4(a4)
- 1c6:	4721                	li	a4,8
- 1c8:	42dc                	lw	a5,4(a3)
- 1ca:	8bb1                	andi	a5,a5,12
- 1cc:	fee79ee3          	bne	a5,a4,1c8 <SystemInit+0x3e>
- 1d0:	e00007b7          	lui	a5,0xe0000
- 1d4:	0f878793          	addi	a5,a5,248 # e00000f8 <__global_pointer$+0xbffff8f8>
- 1d8:	0007a023          	sw	zero,0(a5)
- 1dc:	e00007b7          	lui	a5,0xe0000
- 1e0:	0f478793          	addi	a5,a5,244 # e00000f4 <__global_pointer$+0xbffff8f4>
- 1e4:	08000713          	li	a4,128
- 1e8:	c398                	sw	a4,0(a5)
- 1ea:	8082                	ret
-
-000001ec <main>:
+00000262 <main>:
 // The UART RX Ring Buffer (Must be > 0. Must be a Power of 2)
 uint8_t buff[UART_BUFFER_SIZE] = {0};
 uint8_t uart_rx_buffer[UART_BUFFER_SIZE] = {0x00};
 
 int main()
 {
- 1ec:	1151                	addi	sp,sp,-12
- 1ee:	c222                	sw	s0,4(sp)
- 1f0:	c026                	sw	s1,0(sp)
-	_uart_rx_buffer.buffer = rx_buffer_ptr;
- 1f2:	200004b7          	lui	s1,0x20000
- 1f6:	c406                	sw	ra,8(sp)
+ 262:	1151                	addi	sp,sp,-12
+ 264:	c222                	sw	s0,4(sp)
+ 266:	c026                	sw	s1,0(sp)
+	_uart_rx_buffer.buffer = (uint8_t *)rx_buffer_ptr;
+ 268:	20000437          	lui	s0,0x20000
+ 26c:	c406                	sw	ra,8(sp)
 	SystemInit();
- 1f8:	3f49                	jal	18a <SystemInit>
- 1fa:	00048793          	mv	a5,s1
- 1fe:	89418713          	addi	a4,gp,-1900 # 20000094 <uart_rx_buffer>
- 202:	c398                	sw	a4,0(a5)
-	_uart_rx_buffer.size   = rx_buffer_size;
- 204:	08000713          	li	a4,128
+ 26e:	3f49                	jal	200 <SystemInit>
+ 270:	00440793          	addi	a5,s0,4 # 20000004 <_uart_rx_buffer>
+ 274:	82418713          	addi	a4,gp,-2012 # 20000024 <uart_rx_buffer>
 	_uart_rx_buffer.head   = 0;
- 208:	0007a623          	sw	zero,12(a5)
+ 278:	0007a423          	sw	zero,8(a5)
+	_uart_rx_buffer.buffer = (uint8_t *)rx_buffer_ptr;
+ 27c:	c398                	sw	a4,0(a5)
 	_uart_rx_buffer.size   = rx_buffer_size;
- 20c:	c3d8                	sw	a4,4(a5)
-	_uart_rx_buffer.mask   = rx_buffer_size - 1;
- 20e:	07f00713          	li	a4,127
+ 27e:	4741                	li	a4,16
 	_uart_rx_buffer.tail   = 0;
- 212:	0007a823          	sw	zero,16(a5)
-	_uart_rx_buffer.mask   = rx_buffer_size - 1;
- 216:	c798                	sw	a4,8(a5)
+ 280:	0007a623          	sw	zero,12(a5)
+	_uart_rx_buffer.size   = rx_buffer_size;
+ 284:	c3d8                	sw	a4,4(a5)
 	RCC->APB2PCENR |= RCC_APB2Periph_USART1;
- 218:	400217b7          	lui	a5,0x40021
- 21c:	4f98                	lw	a4,24(a5)
- 21e:	6691                	lui	a3,0x4
- 220:	00048493          	mv	s1,s1
- 224:	8f55                	or	a4,a4,a3
- 226:	cf98                	sw	a4,24(a5)
+ 286:	400217b7          	lui	a5,0x40021
+ 28a:	4f98                	lw	a4,24(a5)
+ 28c:	6691                	lui	a3,0x4
+	USART1->CTLR1 |= CTLR1_UE_Set;
+ 28e:	6609                	lui	a2,0x2
+	RCC->APB2PCENR |= RCC_APB2Periph_USART1;
+ 290:	8f55                	or	a4,a4,a3
+ 292:	cf98                	sw	a4,24(a5)
 	RCC->APB2PCENR |= UART_PORT_RCC | RCC_APB2Periph_AFIO;
- 228:	4f98                	lw	a4,24(a5)
+ 294:	4f98                	lw	a4,24(a5)
 	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_TX));
- 22a:	ff1006b7          	lui	a3,0xff100
- 22e:	16fd                	addi	a3,a3,-1 # ff0fffff <__global_pointer$+0xdf0ff7ff>
+ 296:	ff1006b7          	lui	a3,0xff100
+ 29a:	16fd                	addi	a3,a3,-1 # ff0fffff <__global_pointer$+0xdf0ff7ff>
 	RCC->APB2PCENR |= UART_PORT_RCC | RCC_APB2Periph_AFIO;
- 230:	02176713          	ori	a4,a4,33
- 234:	cf98                	sw	a4,24(a5)
+ 29c:	02176713          	ori	a4,a4,33
+ 2a0:	cf98                	sw	a4,24(a5)
 	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_TX));
- 236:	400117b7          	lui	a5,0x40011
- 23a:	40078793          	addi	a5,a5,1024 # 40011400 <__global_pointer$+0x20010c00>
- 23e:	4398                	lw	a4,0(a5)
- 240:	89418413          	addi	s0,gp,-1900 # 20000094 <uart_rx_buffer>
- 244:	8f75                	and	a4,a4,a3
- 246:	c398                	sw	a4,0(a5)
+ 2a2:	400117b7          	lui	a5,0x40011
+ 2a6:	40078793          	addi	a5,a5,1024 # 40011400 <__global_pointer$+0x20010c00>
+ 2aa:	4398                	lw	a4,0(a5)
+ 2ac:	00440413          	addi	s0,s0,4
+ 2b0:	82418493          	addi	s1,gp,-2012 # 20000024 <uart_rx_buffer>
+ 2b4:	8f75                	and	a4,a4,a3
+ 2b6:	c398                	sw	a4,0(a5)
 	UART_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4 * UART_PIN_TX);	
- 248:	4398                	lw	a4,0(a5)
- 24a:	009006b7          	lui	a3,0x900
- 24e:	8f55                	or	a4,a4,a3
- 250:	c398                	sw	a4,0(a5)
+ 2b8:	4398                	lw	a4,0(a5)
+ 2ba:	009006b7          	lui	a3,0x900
+ 2be:	8f55                	or	a4,a4,a3
+ 2c0:	c398                	sw	a4,0(a5)
 	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_RX));
- 252:	4398                	lw	a4,0(a5)
- 254:	f10006b7          	lui	a3,0xf1000
- 258:	16fd                	addi	a3,a3,-1 # f0ffffff <__global_pointer$+0xd0fff7ff>
- 25a:	8f75                	and	a4,a4,a3
- 25c:	c398                	sw	a4,0(a5)
+ 2c2:	4398                	lw	a4,0(a5)
+ 2c4:	f10006b7          	lui	a3,0xf1000
+ 2c8:	16fd                	addi	a3,a3,-1 # f0ffffff <__global_pointer$+0xd0fff7ff>
+ 2ca:	8f75                	and	a4,a4,a3
+ 2cc:	c398                	sw	a4,0(a5)
 	UART_PORT->CFGLR |= GPIO_CNF_IN_FLOATING << (4 * UART_PIN_RX);
- 25e:	4398                	lw	a4,0(a5)
- 260:	040006b7          	lui	a3,0x4000
- 264:	8f55                	or	a4,a4,a3
- 266:	c398                	sw	a4,0(a5)
+ 2ce:	4398                	lw	a4,0(a5)
+ 2d0:	040006b7          	lui	a3,0x4000
+ 2d4:	8f55                	or	a4,a4,a3
+ 2d6:	c398                	sw	a4,0(a5)
 	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | conf->wordlength | conf->parity;
- 268:	400147b7          	lui	a5,0x40014
- 26c:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
- 270:	4731                	li	a4,12
- 272:	00e79623          	sh	a4,12(a5)
+ 2d8:	400147b7          	lui	a5,0x40014
+ 2dc:	80078793          	addi	a5,a5,-2048 # 40013800 <__global_pointer$+0x20013000>
+ 2e0:	4731                	li	a4,12
+ 2e2:	00e79623          	sh	a4,12(a5)
 	USART1->CTLR2 = conf->stopbits;
- 276:	00079823          	sh	zero,16(a5)
-	USART1->CTLR3 = (uint16_t)0x0000;
- 27a:	00079a23          	sh	zero,20(a5)
+ 2e6:	00079823          	sh	zero,16(a5)
+	USART1->CTLR3 = (uint16_t)0x0000 | conf->flowctrl;
+ 2ea:	00079a23          	sh	zero,20(a5)
 	USART1->BRR = conf->baudrate;
- 27e:	1a100713          	li	a4,417
- 282:	00e79423          	sh	a4,8(a5)
+ 2ee:	1a100713          	li	a4,417
+ 2f2:	00e79423          	sh	a4,8(a5)
 	USART1->CTLR1 |= USART_CTLR1_RXNEIE;
- 286:	00c7d703          	lhu	a4,12(a5)
+ 2f6:	00c7d703          	lhu	a4,12(a5)
  *
  * @return  none
  */
 RV_STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 {
   NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
- 28a:	4685                	li	a3,1
- 28c:	02076713          	ori	a4,a4,32
- 290:	00e79623          	sh	a4,12(a5)
- 294:	e000e737          	lui	a4,0xe000e
- 298:	10d72223          	sw	a3,260(a4) # e000e104 <__global_pointer$+0xc000d904>
+ 2fa:	4685                	li	a3,1
+ 2fc:	02076713          	ori	a4,a4,32
+ 300:	00e79623          	sh	a4,12(a5)
+ 304:	e000e737          	lui	a4,0xe000e
+ 308:	10d72223          	sw	a3,260(a4) # e000e104 <__global_pointer$+0xc000d904>
 	USART1->CTLR1 |= CTLR1_UE_Set;
- 29c:	00c7d703          	lhu	a4,12(a5)
- 2a0:	6689                	lui	a3,0x2
- 2a2:	8f55                	or	a4,a4,a3
- 2a4:	00e79623          	sh	a4,12(a5)
- 2a8:	3cc00713          	li	a4,972
-		while(*string != '\0')
- 2ac:	00074603          	lbu	a2,0(a4)
- 2b0:	e24d                	bnez	a2,352 <main+0x166>
+ 30c:	00c7d703          	lhu	a4,12(a5)
+ 310:	8f51                	or	a4,a4,a2
+ 312:	00e79623          	sh	a4,12(a5)
+	_uart_init_ok = true;
+ 316:	20000737          	lui	a4,0x20000
+ 31a:	00d70023          	sb	a3,0(a4) # 20000000 <_uart_init_ok>
+ 31e:	46000713          	li	a4,1120
+	while(*string != '\0')
+ 322:	00074603          	lbu	a2,0(a4)
+ 326:	ee49                	bnez	a2,3c0 <main+0x15e>
 		&uart_conf
 	);
 
 	// Simple string printing example
 	uart_print("This string will be one line 1");
 	uart_println(" -- This string will be on the same line");
- 2b2:	3ec00513          	li	a0,1004
- 2b6:	33ed                	jal	a0 <uart_println.isra.0>
+ 328:	48000513          	li	a0,1152
+ 32c:	3bcd                	jal	11e <uart_println.isra.0>
 	uart_println("This string will be on its own line");
- 2b8:	41800513          	li	a0,1048
- 2bc:	33d5                	jal	a0 <uart_println.isra.0>
+ 32e:	4ac00513          	li	a0,1196
+ 332:	33f5                	jal	11e <uart_println.isra.0>
 
 	while(1)
 	{
 		// Clear the read buffer
 		memset(buff, 0x00, UART_BUFFER_SIZE);
- 2be:	200006b7          	lui	a3,0x20000
- 2c2:	08000613          	li	a2,128
- 2c6:	01468513          	addi	a0,a3,20 # 20000014 <buff>
- 2ca:	4581                	li	a1,0
- 2cc:	3575                	jal	178 <memset>
+ 334:	81418713          	addi	a4,gp,-2028 # 20000014 <buff>
+	size_t bytes_read = 0;
+
+	// Make sure the buffer passed and length are valid
+	if(buffer != NULL && len != 0)
+	{
+		while(len--)
+ 338:	4541                	li	a0,16
+ 33a:	00f70613          	addi	a2,a4,15
+			// type normally and have newlines
+			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE - 1; chr++)
+			{
+				if(buff[chr] == '\r')
+				{
+					buff[chr + 1] = '\n';
+ 33e:	45a9                	li	a1,10
+		memset(buff, 0x00, UART_BUFFER_SIZE);
+ 340:	00072023          	sw	zero,0(a4)
+ 344:	00072223          	sw	zero,4(a4)
+ 348:	00072423          	sw	zero,8(a4)
+ 34c:	00072623          	sw	zero,12(a4)
+	size_t bytes_read = 0;
+ 350:	4781                	li	a5,0
 		{
 			// If the buffer has no more data, return how many bytes were read
 			if(_uart_rx_buffer.head == _uart_rx_buffer.tail) break; 
+ 352:	00842303          	lw	t1,8(s0)
+ 356:	4454                	lw	a3,12(s0)
+ 358:	06d30d63          	beq	t1,a3,3d2 <main+0x170>
 	
 			// Add the current tail byte to the buffer
 			*buffer++ = _uart_rx_buffer.buffer[_uart_rx_buffer.tail];
- 2ce:	200006b7          	lui	a3,0x20000
-	size_t bytes_read = 0;
- 2d2:	4781                	li	a5,0
-			*buffer++ = _uart_rx_buffer.buffer[_uart_rx_buffer.tail];
- 2d4:	01468513          	addi	a0,a3,20 # 20000014 <buff>
-		while(len--)
- 2d8:	08000613          	li	a2,128
-			if(_uart_rx_buffer.head == _uart_rx_buffer.tail) break; 
- 2dc:	44cc                	lw	a1,12(s1)
- 2de:	4898                	lw	a4,16(s1)
- 2e0:	08e58263          	beq	a1,a4,364 <main+0x178>
-			*buffer++ = _uart_rx_buffer.buffer[_uart_rx_buffer.tail];
- 2e4:	4898                	lw	a4,16(s1)
- 2e6:	00a785b3          	add	a1,a5,a0
+ 35c:	4454                	lw	a3,12(s0)
+ 35e:	00e78333          	add	t1,a5,a4
 			// Increment the ring buffer tail position
-			_uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
+			_uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) % _uart_rx_buffer.size;
 
 			// Increment the count of bytes
 			bytes_read++;
- 2ea:	0785                	addi	a5,a5,1
+ 362:	0785                	addi	a5,a5,1
 			*buffer++ = _uart_rx_buffer.buffer[_uart_rx_buffer.tail];
- 2ec:	9722                	add	a4,a4,s0
- 2ee:	00074703          	lbu	a4,0(a4)
- 2f2:	00e58023          	sb	a4,0(a1)
-			_uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
- 2f6:	4898                	lw	a4,16(s1)
- 2f8:	0705                	addi	a4,a4,1
- 2fa:	07f77713          	andi	a4,a4,127
- 2fe:	c898                	sw	a4,16(s1)
+ 364:	96a6                	add	a3,a3,s1
+ 366:	0006c683          	lbu	a3,0(a3) # 4000000 <lib_uart.c.b1eec444+0x3ffdd92>
+ 36a:	00d30023          	sb	a3,0(t1)
+			_uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) % _uart_rx_buffer.size;
+ 36e:	4454                	lw	a3,12(s0)
+ 370:	0685                	addi	a3,a3,1
+ 372:	8abd                	andi	a3,a3,15
+ 374:	c454                	sw	a3,12(s0)
 		while(len--)
- 300:	fcc79ee3          	bne	a5,a2,2dc <main+0xf0>
+ 376:	fca79ee3          	bne	a5,a0,352 <main+0xf0>
+			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE - 1; chr++)
+ 37a:	86ba                	mv	a3,a4
+				if(buff[chr] == '\r')
+ 37c:	4335                	li	t1,13
+ 37e:	0006c283          	lbu	t0,0(a3)
+ 382:	00629563          	bne	t0,t1,38c <main+0x12a>
+					buff[chr + 1] = '\n';
+ 386:	00b680a3          	sb	a1,1(a3)
+					bytes_read++;
+ 38a:	0785                	addi	a5,a5,1
+			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE - 1; chr++)
+ 38c:	0685                	addi	a3,a3,1
+ 38e:	fed618e3          	bne	a2,a3,37e <main+0x11c>
+	if(buffer == NULL || size == 0) return UART_INVALID_ARGS;
+ 392:	d7dd                	beqz	a5,340 <main+0xde>
+		while(!(USART1->STATR & USART_FLAG_TC));
+ 394:	400146b7          	lui	a3,0x40014
+	while(size--)
+ 398:	17fd                	addi	a5,a5,-1
+	const uint8_t *bytes = (const uint8_t *)buffer;
+ 39a:	833a                	mv	t1,a4
+		while(!(USART1->STATR & USART_FLAG_TC));
+ 39c:	80068693          	addi	a3,a3,-2048 # 40013800 <__global_pointer$+0x20013000>
+	while(size--)
+ 3a0:	53fd                	li	t2,-1
+		while(!(USART1->STATR & USART_FLAG_TC));
+ 3a2:	0006d283          	lhu	t0,0(a3)
+ 3a6:	0402f293          	andi	t0,t0,64
+ 3aa:	fe028ce3          	beqz	t0,3a2 <main+0x140>
+		USART1->DATAR = *bytes++;
+ 3ae:	00034283          	lbu	t0,0(t1)
+	while(size--)
+ 3b2:	17fd                	addi	a5,a5,-1
+		USART1->DATAR = *bytes++;
+ 3b4:	0305                	addi	t1,t1,1
+ 3b6:	00569223          	sh	t0,4(a3)
+	while(size--)
+ 3ba:	fe7794e3          	bne	a5,t2,3a2 <main+0x140>
+ 3be:	b749                	j	340 <main+0xde>
+		while(!(USART1->STATR & USART_FLAG_TC));
+ 3c0:	0007d683          	lhu	a3,0(a5)
+ 3c4:	0406f693          	andi	a3,a3,64
+ 3c8:	dee5                	beqz	a3,3c0 <main+0x15e>
+		USART1->DATAR = *string++;
+ 3ca:	0705                	addi	a4,a4,1
+ 3cc:	00c79223          	sh	a2,4(a5)
+ 3d0:	bf89                	j	322 <main+0xc0>
 		if(bytes_read != 0)
-		{
-			// Replace any \r with \r\n.
-			// NOTE: This WILL corrupt data. It is only to allow the user to 
-			// type normally and have newlines
-			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE-1; chr++)
- 304:	01468793          	addi	a5,a3,20
- 308:	07f78713          	addi	a4,a5,127
- 30c:	01468513          	addi	a0,a3,20
-			{
-				if(buff[chr] == '\r') buff[chr + 1] = '\n';
- 310:	4635                	li	a2,13
- 312:	45a9                	li	a1,10
- 314:	0007c303          	lbu	t1,0(a5)
- 318:	00c31463          	bne	t1,a2,320 <main+0x134>
- 31c:	00b780a3          	sb	a1,1(a5)
-			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE-1; chr++)
- 320:	0785                	addi	a5,a5,1
- 322:	fef719e3          	bne	a4,a5,314 <main+0x128>
-			while(!(USART1->STATR & USART_FLAG_TC));
- 326:	40014737          	lui	a4,0x40014
- 32a:	4781                	li	a5,0
- 32c:	80070713          	addi	a4,a4,-2048 # 40013800 <__global_pointer$+0x20013000>
-		while(size--)
- 330:	08000593          	li	a1,128
-			while(!(USART1->STATR & USART_FLAG_TC));
- 334:	00075603          	lhu	a2,0(a4)
- 338:	04067613          	andi	a2,a2,64
- 33c:	de65                	beqz	a2,334 <main+0x148>
-			USART1->DATAR = *bytes++;
- 33e:	00f50633          	add	a2,a0,a5
- 342:	00064603          	lbu	a2,0(a2)
-		while(size--)
- 346:	0785                	addi	a5,a5,1
-			USART1->DATAR = *bytes++;
- 348:	00c71223          	sh	a2,4(a4)
-		while(size--)
- 34c:	feb794e3          	bne	a5,a1,334 <main+0x148>
- 350:	bf8d                	j	2c2 <main+0xd6>
-			while(!(USART1->STATR & USART_FLAG_TC));
- 352:	0007d683          	lhu	a3,0(a5)
- 356:	0406f693          	andi	a3,a3,64
- 35a:	dee5                	beqz	a3,352 <main+0x166>
-			USART1->DATAR = *string++;
- 35c:	0705                	addi	a4,a4,1
- 35e:	00c79223          	sh	a2,4(a5)
- 362:	b7a9                	j	2ac <main+0xc0>
-		if(bytes_read != 0)
- 364:	dfb9                	beqz	a5,2c2 <main+0xd6>
- 366:	bf79                	j	304 <main+0x118>
+ 3d2:	d7bd                	beqz	a5,340 <main+0xde>
+ 3d4:	b75d                	j	37a <main+0x118>
 
-00000368 <USART1_IRQHandler>:
+000003d6 <USART1_IRQHandler>:
 {
- 368:	1131                	addi	sp,sp,-20
- 36a:	c03e                	sw	a5,0(sp)
+ 3d6:	fcc10113          	addi	sp,sp,-52
+ 3da:	c23e                	sw	a5,4(sp)
 	if(USART1->STATR & USART_STATR_RXNE) 
- 36c:	400147b7          	lui	a5,0x40014
+ 3dc:	400147b7          	lui	a5,0x40014
 {
- 370:	c23a                	sw	a4,4(sp)
+ 3e0:	c43a                	sw	a4,8(sp)
 	if(USART1->STATR & USART_STATR_RXNE) 
- 372:	8007d703          	lhu	a4,-2048(a5) # 40013800 <__global_pointer$+0x20013000>
+ 3e2:	8007d703          	lhu	a4,-2048(a5) # 40013800 <__global_pointer$+0x20013000>
 {
- 376:	c82e                	sw	a1,16(sp)
- 378:	c632                	sw	a2,12(sp)
- 37a:	c436                	sw	a3,8(sp)
+ 3e6:	d806                	sw	ra,48(sp)
+ 3e8:	d616                	sw	t0,44(sp)
+ 3ea:	d41a                	sw	t1,40(sp)
+ 3ec:	d21e                	sw	t2,36(sp)
+ 3ee:	d022                	sw	s0,32(sp)
+ 3f0:	ce26                	sw	s1,28(sp)
+ 3f2:	cc2a                	sw	a0,24(sp)
+ 3f4:	ca2e                	sw	a1,20(sp)
+ 3f6:	c832                	sw	a2,16(sp)
+ 3f8:	c636                	sw	a3,12(sp)
 	if(USART1->STATR & USART_STATR_RXNE) 
- 37c:	02077713          	andi	a4,a4,32
- 380:	cf15                	beqz	a4,3bc <USART1_IRQHandler+0x54>
- 382:	80078793          	addi	a5,a5,-2048
+ 3fa:	02077713          	andi	a4,a4,32
+ 3fe:	c329                	beqz	a4,440 <USART1_IRQHandler+0x6a>
+ 400:	80078793          	addi	a5,a5,-2048
 		uint8_t recv = (uint8_t)USART1->DATAR;
- 386:	0047d603          	lhu	a2,4(a5)
-		size_t next_head = (_uart_rx_buffer.head + 1) & _uart_rx_buffer.mask;
- 38a:	200007b7          	lui	a5,0x20000
- 38e:	00078693          	mv	a3,a5
- 392:	46d8                	lw	a4,12(a3)
- 394:	468c                	lw	a1,8(a3)
-		if(next_head == _uart_rx_buffer.tail) 
- 396:	4a94                	lw	a3,16(a3)
-		size_t next_head = (_uart_rx_buffer.head + 1) & _uart_rx_buffer.mask;
- 398:	0705                	addi	a4,a4,1
- 39a:	8f6d                	and	a4,a4,a1
+ 404:	0047d483          	lhu	s1,4(a5)
+		size_t next_head = (_uart_rx_buffer.head + 1) % _uart_rx_buffer.size;
+ 408:	200007b7          	lui	a5,0x20000
+ 40c:	00478413          	addi	s0,a5,4 # 20000004 <_uart_rx_buffer>
+ 410:	4408                	lw	a0,8(s0)
+ 412:	404c                	lw	a1,4(s0)
 		uint8_t recv = (uint8_t)USART1->DATAR;
- 39c:	0ff67613          	zext.b	a2,a2
+ 414:	0ff4f493          	zext.b	s1,s1
+		size_t next_head = (_uart_rx_buffer.head + 1) % _uart_rx_buffer.size;
+ 418:	0505                	addi	a0,a0,1
+ 41a:	c02e                	sw	a1,0(sp)
+ 41c:	3965                	jal	d4 <__umodsi3>
 		if(next_head == _uart_rx_buffer.tail) 
- 3a0:	00078793          	mv	a5,a5
- 3a4:	00d71663          	bne	a4,a3,3b0 <USART1_IRQHandler+0x48>
-				 _uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
- 3a8:	4b94                	lw	a3,16(a5)
- 3aa:	0685                	addi	a3,a3,1
- 3ac:	8eed                	and	a3,a3,a1
- 3ae:	cb94                	sw	a3,16(a5)
+ 41e:	4454                	lw	a3,12(s0)
+ 420:	4582                	lw	a1,0(sp)
+		size_t next_head = (_uart_rx_buffer.head + 1) % _uart_rx_buffer.size;
+ 422:	872a                	mv	a4,a0
+		if(next_head == _uart_rx_buffer.tail) 
+ 424:	00d51863          	bne	a0,a3,434 <USART1_IRQHandler+0x5e>
+ 428:	c02a                	sw	a0,0(sp)
+				 _uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) % _uart_rx_buffer.size;
+ 42a:	4448                	lw	a0,12(s0)
+ 42c:	0505                	addi	a0,a0,1
+ 42e:	315d                	jal	d4 <__umodsi3>
+ 430:	4702                	lw	a4,0(sp)
+ 432:	c448                	sw	a0,12(s0)
 		_uart_rx_buffer.buffer[_uart_rx_buffer.head] = recv;
- 3b0:	47cc                	lw	a1,12(a5)
- 3b2:	4394                	lw	a3,0(a5)
+ 434:	4414                	lw	a3,8(s0)
+ 436:	401c                	lw	a5,0(s0)
 		_uart_rx_buffer.head = next_head;
- 3b4:	c7d8                	sw	a4,12(a5)
+ 438:	c418                	sw	a4,8(s0)
 		_uart_rx_buffer.buffer[_uart_rx_buffer.head] = recv;
- 3b6:	96ae                	add	a3,a3,a1
- 3b8:	00c68023          	sb	a2,0(a3)
+ 43a:	97b6                	add	a5,a5,a3
+ 43c:	00978023          	sb	s1,0(a5)
 }
- 3bc:	45c2                	lw	a1,16(sp)
- 3be:	4632                	lw	a2,12(sp)
- 3c0:	46a2                	lw	a3,8(sp)
- 3c2:	4712                	lw	a4,4(sp)
- 3c4:	4782                	lw	a5,0(sp)
- 3c6:	0151                	addi	sp,sp,20
- 3c8:	30200073          	mret
- 3cc:	6854                	.insn	2, 0x6854
- 3ce:	7369                	lui	t1,0xffffa
- 3d0:	7320                	.insn	2, 0x7320
- 3d2:	7274                	.insn	2, 0x7274
- 3d4:	6e69                	lui	t3,0x1a
- 3d6:	69772067          	.insn	4, 0x69772067
- 3da:	6c6c                	.insn	2, 0x6c6c
- 3dc:	6220                	.insn	2, 0x6220
- 3de:	2065                	jal	486 <_data_lma+0x4a>
- 3e0:	20656e6f          	jal	t3,565e6 <lib_uart.c.2732690c+0x5439b>
- 3e4:	696c                	.insn	2, 0x696c
- 3e6:	656e                	.insn	2, 0x656e
- 3e8:	3120                	.insn	2, 0x3120
- 3ea:	0000                	unimp
- 3ec:	2d20                	.insn	2, 0x2d20
- 3ee:	202d                	jal	418 <USART1_IRQHandler+0xb0>
- 3f0:	6854                	.insn	2, 0x6854
- 3f2:	7369                	lui	t1,0xffffa
- 3f4:	7320                	.insn	2, 0x7320
- 3f6:	7274                	.insn	2, 0x7274
- 3f8:	6e69                	lui	t3,0x1a
- 3fa:	69772067          	.insn	4, 0x69772067
- 3fe:	6c6c                	.insn	2, 0x6c6c
- 400:	6220                	.insn	2, 0x6220
- 402:	2065                	jal	4aa <_data_lma+0x6e>
- 404:	74206e6f          	jal	t3,6b46 <lib_uart.c.2732690c+0x48fb>
- 408:	6568                	.insn	2, 0x6568
- 40a:	7320                	.insn	2, 0x7320
- 40c:	6d61                	lui	s10,0x18
- 40e:	2065                	jal	4b6 <_data_lma+0x7a>
- 410:	696c                	.insn	2, 0x696c
- 412:	656e                	.insn	2, 0x656e
- 414:	0000                	unimp
- 416:	0000                	unimp
- 418:	6854                	.insn	2, 0x6854
- 41a:	7369                	lui	t1,0xffffa
- 41c:	7320                	.insn	2, 0x7320
- 41e:	7274                	.insn	2, 0x7274
- 420:	6e69                	lui	t3,0x1a
- 422:	69772067          	.insn	4, 0x69772067
- 426:	6c6c                	.insn	2, 0x6c6c
- 428:	6220                	.insn	2, 0x6220
- 42a:	2065                	jal	4d2 <_data_lma+0x96>
- 42c:	69206e6f          	jal	t3,6abe <lib_uart.c.2732690c+0x4873>
- 430:	7374                	.insn	2, 0x7374
- 432:	6f20                	.insn	2, 0x6f20
- 434:	6c206e77          	.insn	4, 0x6c206e77
- 438:	6e69                	lui	t3,0x1a
- 43a:	0065                	c.nop	25
+ 440:	5402                	lw	s0,32(sp)
+ 442:	50c2                	lw	ra,48(sp)
+ 444:	52b2                	lw	t0,44(sp)
+ 446:	5322                	lw	t1,40(sp)
+ 448:	5392                	lw	t2,36(sp)
+ 44a:	44f2                	lw	s1,28(sp)
+ 44c:	4562                	lw	a0,24(sp)
+ 44e:	45d2                	lw	a1,20(sp)
+ 450:	4642                	lw	a2,16(sp)
+ 452:	46b2                	lw	a3,12(sp)
+ 454:	4722                	lw	a4,8(sp)
+ 456:	4792                	lw	a5,4(sp)
+ 458:	03410113          	addi	sp,sp,52
+ 45c:	30200073          	mret
+ 460:	6854                	.insn	2, 0x6854
+ 462:	7369                	lui	t1,0xffffa
+ 464:	7320                	.insn	2, 0x7320
+ 466:	7274                	.insn	2, 0x7274
+ 468:	6e69                	lui	t3,0x1a
+ 46a:	69772067          	.insn	4, 0x69772067
+ 46e:	6c6c                	.insn	2, 0x6c6c
+ 470:	6220                	.insn	2, 0x6220
+ 472:	2065                	jal	51a <_data_lma+0x4a>
+ 474:	20656e6f          	jal	t3,5667a <lib_uart.c.b1eec444+0x5440c>
+ 478:	696c                	.insn	2, 0x696c
+ 47a:	656e                	.insn	2, 0x656e
+ 47c:	3120                	.insn	2, 0x3120
+ 47e:	0000                	unimp
+ 480:	2d20                	.insn	2, 0x2d20
+ 482:	202d                	jal	4ac <USART1_IRQHandler+0xd6>
+ 484:	6854                	.insn	2, 0x6854
+ 486:	7369                	lui	t1,0xffffa
+ 488:	7320                	.insn	2, 0x7320
+ 48a:	7274                	.insn	2, 0x7274
+ 48c:	6e69                	lui	t3,0x1a
+ 48e:	69772067          	.insn	4, 0x69772067
+ 492:	6c6c                	.insn	2, 0x6c6c
+ 494:	6220                	.insn	2, 0x6220
+ 496:	2065                	jal	53e <_data_lma+0x6e>
+ 498:	74206e6f          	jal	t3,6bda <lib_uart.c.b1eec444+0x496c>
+ 49c:	6568                	.insn	2, 0x6568
+ 49e:	7320                	.insn	2, 0x7320
+ 4a0:	6d61                	lui	s10,0x18
+ 4a2:	2065                	jal	54a <_data_lma+0x7a>
+ 4a4:	696c                	.insn	2, 0x696c
+ 4a6:	656e                	.insn	2, 0x656e
+ 4a8:	0000                	unimp
+ 4aa:	0000                	unimp
+ 4ac:	6854                	.insn	2, 0x6854
+ 4ae:	7369                	lui	t1,0xffffa
+ 4b0:	7320                	.insn	2, 0x7320
+ 4b2:	7274                	.insn	2, 0x7274
+ 4b4:	6e69                	lui	t3,0x1a
+ 4b6:	69772067          	.insn	4, 0x69772067
+ 4ba:	6c6c                	.insn	2, 0x6c6c
+ 4bc:	6220                	.insn	2, 0x6220
+ 4be:	2065                	jal	566 <_data_lma+0x96>
+ 4c0:	69206e6f          	jal	t3,6b52 <lib_uart.c.b1eec444+0x48e4>
+ 4c4:	7374                	.insn	2, 0x7374
+ 4c6:	6f20                	.insn	2, 0x6f20
+ 4c8:	6c206e77          	.insn	4, 0x6c206e77
+ 4cc:	6e69                	lui	t3,0x1a
+ 4ce:	0065                	c.nop	25

@@ -28,8 +28,14 @@
 
 #include "ch32v003fun.h"
 #include <stddef.h>
+#include <stdbool.h>
 
 /*** Static Variables ********************************************************/
+// Bool flag to prevent users from getting suck in a read/write loop if the
+// UART was not able to init
+static bool _uart_init_ok = false;
+
+// UART RX Ring Buffer defined, gets set in uart_init()
 static _uart_buffer_t _uart_rx_buffer = {NULL, 0,0,0};
 
 
@@ -47,7 +53,7 @@ void USART1_IRQHandler(void)
 		uint8_t recv = (uint8_t)USART1->DATAR;
 
 		// Calculate the next write position
-		size_t next_head = (_uart_rx_buffer.head + 1) & _uart_rx_buffer.mask;
+		size_t next_head = (_uart_rx_buffer.head + 1) % _uart_rx_buffer.size;
 
 		// If the next position is the same as the tail, either reject the new data
 		// or overwrite old data
@@ -55,7 +61,7 @@ void USART1_IRQHandler(void)
 		{
 			#ifdef RX_RING_BUFFER_OVERWRITE
 				// Increment the tail position
-				 _uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
+				 _uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) % _uart_rx_buffer.size;
 			#else
 				// Reject any data that overfills the buffer
 				return;
@@ -70,17 +76,20 @@ void USART1_IRQHandler(void)
 }
 
 /*** Initialiser *************************************************************/
-void uart_init(	uint8_t *rx_buffer_ptr,
-			    const uint32_t rx_buffer_size,
-			    const uart_config_t *conf     )
+uart_err_t uart_init( const uint8_t *rx_buffer_ptr,
+					  const uint32_t rx_buffer_size,
+					  const uart_config_t *conf     )
 {
-	// Make sure the buffer is a Power of 2 in size
-	// TODO: Also return
+	// Make sure the input variables are valid.
+	if(rx_buffer_ptr == NULL || rx_buffer_size == 0 || conf == NULL)
+	{
+		_uart_init_ok = false;
+		return UART_NOT_INITIALIZED;
+	}
 
 	// Set up the RX Ring buffer Variables
-	_uart_rx_buffer.buffer = rx_buffer_ptr;
+	_uart_rx_buffer.buffer = (uint8_t *)rx_buffer_ptr;
 	_uart_rx_buffer.size   = rx_buffer_size;
-	_uart_rx_buffer.mask   = rx_buffer_size - 1;
 	_uart_rx_buffer.head   = 0;
 	_uart_rx_buffer.tail   = 0;
 	
@@ -102,10 +111,9 @@ void uart_init(	uint8_t *rx_buffer_ptr,
 	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | conf->wordlength | conf->parity;
 	// Set CTLR2 Register (Stopbits)
 	USART1->CTLR2 = conf->stopbits;
-	// Set CTLR3 Register
-	USART1->CTLR3 = (uint16_t)0x0000;
-	if(conf->cts) USART1->CTLR3 |= UART_CTS_MASK;
-	if(conf->rts) USART1->CTLR3 |= UART_RTS_MASK;
+	// Set CTLR3 Register (Flow control)
+	USART1->CTLR3 = (uint16_t)0x0000 | conf->flowctrl;
+	
 	// Set the Baudrate, assuming 48KHz
 	USART1->BRR = conf->baudrate;
 
@@ -115,56 +123,53 @@ void uart_init(	uint8_t *rx_buffer_ptr,
 	
 	// Enable the UART
 	USART1->CTLR1 |= CTLR1_UE_Set;
+
+	// Set ok flag and return OK
+	_uart_init_ok = true;
+	return UART_OK;
 }
 
 /*** Write *******************************************************************/
 uart_err_t uart_write(const void *buffer, size_t size)
 {
-	uart_err_t ret_err = UART_INVALID_ARGS;
+	if(!_uart_init_ok) return UART_NOT_INITIALIZED;
+	if(buffer == NULL || size == 0) return UART_INVALID_ARGS;
 	
-	if(buffer != NULL && size != 0) 
+	// Cast the input to a uint8_t
+	const uint8_t *bytes = (const uint8_t *)buffer;
+	while(size--)
 	{
-		// TODO: Set ret to not finished
-		// Cast the input to a uint8_t
-		const uint8_t *bytes = (const uint8_t *)buffer;
-		while(size--)
-		{
-			// Wait for the current transmission to finish
-			while(!(USART1->STATR & USART_FLAG_TC));
-			USART1->DATAR = *bytes++;
-		}	
-		ret_err = UART_OK;
+		// Wait for the current transmission to finish
+		while(!(USART1->STATR & USART_FLAG_TC));
+		USART1->DATAR = *bytes++;
 	}
-
-	return ret_err;
+	
+	return UART_OK;
 }
 
 
 uart_err_t uart_print(const char *string)
 {
-	uart_err_t ret_err = UART_INVALID_ARGS;
-
-	if(string != NULL)
+	if(!_uart_init_ok) return UART_NOT_INITIALIZED;
+	if(string == NULL) return UART_INVALID_ARGS;
+	
+	while(*string != '\0')
 	{
-		// TODO: Set ret to not finished
-		while(*string != '\0')
-		{
-			// Wait for the current transmission to finish
-			while(!(USART1->STATR & USART_FLAG_TC));
-			USART1->DATAR = *string++;
-		}
-		ret_err = UART_OK;
+		// Wait for the current transmission to finish
+		while(!(USART1->STATR & USART_FLAG_TC));
+		USART1->DATAR = *string++;
 	}
-
-	return ret_err;
+	
+	return UART_OK;
 }
 
 
 uart_err_t uart_println(const char *string)
 {
-	// Catches NULL input also
+	// Catches NULL or invalid string and not init
 	uart_err_t ret_err = uart_print(string);
 	
+	// If input was valid & sent, send \r\n
 	if(ret_err == UART_OK)
 	{
 		// Print the terminating characters
@@ -194,7 +199,7 @@ size_t uart_read(uint8_t *buffer, size_t len)
 			// Add the current tail byte to the buffer
 			*buffer++ = _uart_rx_buffer.buffer[_uart_rx_buffer.tail];
 			// Increment the ring buffer tail position
-			_uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) & _uart_rx_buffer.mask;
+			_uart_rx_buffer.tail = (_uart_rx_buffer.tail + 1) % _uart_rx_buffer.size;
 
 			// Increment the count of bytes
 			bytes_read++;

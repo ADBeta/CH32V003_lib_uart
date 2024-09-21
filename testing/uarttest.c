@@ -9,7 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define UART_BUFFER_SIZE 128
+#define UART_BUFFER_SIZE 16
 
 // The UART RX Ring Buffer (Must be > 0. Must be a Power of 2)
 uint8_t buff[UART_BUFFER_SIZE] = {0};
@@ -25,8 +25,7 @@ int main()
 		.wordlength  = UART_WORDLENGTH_8,
 		.parity      = UART_PARITY_NONE,
 		.stopbits    = UART_STOPBITS_ONE,
-		.cts         = false,
-		.rts         = false,
+		.flowctrl    = UART_FLOWCTRL_NONE,
 	};
 
 	// Init the UART system. See `lib_uart.h` for baud, and other config vars
@@ -57,13 +56,17 @@ int main()
 			// Replace any \r with \r\n.
 			// NOTE: This WILL corrupt data. It is only to allow the user to 
 			// type normally and have newlines
-			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE-1; chr++)
+			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE - 1; chr++)
 			{
-				if(buff[chr] == '\r') buff[chr + 1] = '\n';
+				if(buff[chr] == '\r')
+				{
+					buff[chr + 1] = '\n';
+					bytes_read++;
+				}
 			}
 
 			// Write the number of bytes read to the UART
-			uart_write((uint8_t *)buff, UART_BUFFER_SIZE);
+			uart_write((uint8_t *)buff, bytes_read);
 		}
 	}
 	

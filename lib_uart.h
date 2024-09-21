@@ -4,7 +4,7 @@
 * See GitHub for more information: 
 * https://github.com/ADBeta/CH32V003_lib_uart
 * 
-* 18 Sep 2024	Version 4.5
+* 21 Sep 2024    Version 4.9
 *
 * Released under the MIT Licence
 * Copyright ADBeta (c) 2024
@@ -34,22 +34,24 @@
 #include <stdbool.h>
 
 /*** Configuration Flags *****************************************************/
-// TODO: Move to funconfig.h
-// Enable overwriting of the RX Ring Buffer.
-// Enabled:  Incomming data will overwrite older data in the buffer
-// Disabled: Incomming data will not be added to the buffer until space is free
-#define RX_RING_BUFFER_OVERWRITE
-
-#define UART_PINOUT_DEFAULT
-
-
-
-/*** Macro Functions *********************************************************/
+/*
+NOTE: Set these flags in funconfig.h. 
+  Enable/Disable overwriting of the RX Ring Buffer.
+  Enabled:  Incomming data will overwrite older data in the buffer
+  Disabled: Incomming data will not be added to the buffer until space is free
+  
+  #define RX_RING_BUFFER_OVERWRITE
+  
+  
+  Pinout        TX        RX        CTS        RTS
+  Default       PD5       PD6
+  
+  #define UART_PINOUT_DEFAULT
+*/
 
 /*** Typedefs and defines  ***************************************************/
 // Default Pinout Variables
 #ifdef UART_PINOUT_DEFAULT
-	#define I2C_AFIO_REG    ((uint32_t)0x00000000)
 	#define UART_PORT_RCC   RCC_APB2Periph_GPIOD
 	#define UART_PORT       GPIOD
 	#define UART_PIN_TX     5
@@ -60,8 +62,9 @@
 /// @brief UART Error Values
 typedef enum {
 	UART_OK              = 0,
-	UART_TIMEOUT,
 	UART_INVALID_ARGS,
+	UART_NOT_INITIALIZED,
+	UART_TIMEOUT,
 	UART_BUFFER_EMPTY,
 } uart_err_t;
 
@@ -106,22 +109,24 @@ typedef enum {
 	UART_STOPBITS_ONE_HALF  = ((uint16_t)0x3000),
 } uart_stopbits_t;
 
-
 /// @brief UART Flow Control Masks
-/// Bits in USART1->CTLR3
-#define UART_CTS_MASK ((uint16_t)0x0200)
-#define UART_RTS_MASK ((uint16_t)0x0100)
+typedef enum {
+	UART_FLOWCTRL_NONE      = ((uint16_t)0x0000),
+	UART_FLOWCTRL_CTS       = ((uint16_t)0x0200),
+	UART_FLOWCTRL_RTS       = ((uint16_t)0x0100),
+	UART_FLOWCTRL_CTS_RTS   = ((uint16_t)0x0300)
+
+} uart_flowctrl_t;
 
 
 /// @brief UART Configuration Struct
+// TODO: Break bit?
 typedef struct {
-	uart_baudrate_t   baudrate;
-	uart_wordlength_t wordlength;
-	uart_parity_t     parity;
-	uart_stopbits_t   stopbits;
-	// TODO: BREAK Bit?
-	bool              cts;
-	bool              rts;
+	uart_baudrate_t    baudrate;
+	uart_wordlength_t  wordlength;
+	uart_parity_t      parity;
+	uart_stopbits_t    stopbits;
+	uart_flowctrl_t    flowctrl;
 } uart_config_t;
 
 
@@ -129,7 +134,6 @@ typedef struct {
 typedef struct {
 	uint8_t   *buffer;
 	uint32_t  size;
-	uint32_t  mask;
 	volatile uint32_t  head;
 	volatile uint32_t  tail;
 } _uart_buffer_t;
@@ -137,16 +141,13 @@ typedef struct {
 
 /*** Initialisers ************************************************************/
 /// @brief Initiliase the UART peripheral with the passed configuratiion.
-///
-/// TODO:
-/// @param baud, buadrate of the interface (921600 - 1200)
-/// @param wordlength, interface word length (8 or 9 bits)
-/// @param parity, Parity variable (None, Even or Odd)
-/// @param stopbits, how many stop bits to transmit (0.5, 1, 2, 1.5)
-/// @return None 
-void uart_init( uint8_t *rx_buffer_ptr,
-			    const uint32_t rx_buffer_size,
-			    const uart_config_t *conf    
+/// @param uint8_t *, pointer to the rx ring buffer
+/// @param uint32_t, size of the RX ring buffer
+/// @param uart_config_t, UART configuration
+/// @return uart_err_t, UART_NOT_INITIALIZED on error
+uart_err_t uart_init( const uint8_t *rx_buffer_ptr,
+					  const uint32_t rx_buffer_size,
+					  const uart_config_t *conf    
 );
 
 
