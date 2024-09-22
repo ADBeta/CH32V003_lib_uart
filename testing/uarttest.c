@@ -19,6 +19,7 @@ int main()
 {
 	SystemInit();
 
+	Delay_Ms(1000);
 
 	uart_config_t uart_conf = {
 		.baudrate    = UART_BAUD_115200,

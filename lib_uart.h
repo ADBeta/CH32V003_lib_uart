@@ -4,7 +4,7 @@
 * See GitHub for more information: 
 * https://github.com/ADBeta/CH32V003_lib_uart
 * 
-* 21 Sep 2024    Version 4.9
+* 22 Sep 2024    Version 5.2
 *
 * Released under the MIT Licence
 * Copyright ADBeta (c) 2024
@@ -35,27 +35,120 @@
 
 /*** Configuration Flags *****************************************************/
 /*
-NOTE: Set these flags in funconfig.h. 
-  Enable/Disable overwriting of the RX Ring Buffer.
-  Enabled:  Incomming data will overwrite older data in the buffer
-  Disabled: Incomming data will not be added to the buffer until space is free
+Set these flags in funconfig.h. 
+
+Enable/Disable overwriting of the RX Ring Buffer.
+Enabled:  Incomming data will overwrite older data in the buffer
+Disabled: Incomming data will not be added to the buffer until space is free
   
-  #define RX_RING_BUFFER_OVERWRITE
-  
-  
-  Pinout        TX        RX        CTS        RTS
-  Default       PD5       PD6
-  
-  #define UART_PINOUT_DEFAULT
+#define RX_RING_BUFFER_OVERWRITE
+
+NOTE: UART_ALTERNATE_1 will disable SWIO (PD1)
+
+Pinout        TX        RX        CTS        RTS
+Default       PD5       PD6       PD3        PC2
+Alternate 1   PD0       PD1       PC3        PC2
+Alternate 2   PD6       PD5       PC6        PC7
+Alternate 3   PC0       PC1       PC6        PC7
+
+#define UART_PINOUT_DEFAULT
+#define UART_PINOUT_ALTERNATE_1
+#define UART_PINOUT_ALTERNATE_2
+#define UART_PINOUT_ALTERNATE_3
 */
 
 /*** Typedefs and defines  ***************************************************/
-// Default Pinout Variables
+// UART AFIO Reset Mask
+#define UART_AFIO_RESET_MASK ((uint32_t)0xFFDFFFFB)
+
+// Guard against no UART_PINOUT being defined. Default to _DEFAULT
+#if !defined(UART_PINOUT_DEFAULT) && \
+    !defined(UART_PINOUT_ALTERNATE_1) && \
+    !defined(UART_PINOUT_ALTERNATE_2) && \
+    !defined(UART_PINOUT_ALTERNATE_3)
+
+	#define UART_PINOUT_DEFAULT
+#endif
+
+// Default Pinout
+// TX        RX        CTS        RTS
+// PD5       PD6       PD3        PC2
 #ifdef UART_PINOUT_DEFAULT
-	#define UART_PORT_RCC   RCC_APB2Periph_GPIOD
-	#define UART_PORT       GPIOD
+	#define UART_AFIO_MASK       ((uint32_t)0x00000000)
+	//
+	#define UART_TXRX_PORT_RCC   RCC_APB2Periph_GPIOD
+	#define UART_CTS_PORT_RCC    RCC_APB2Periph_GPIOD
+	#define UART_RTS_PORT_RCC    RCC_APB2Periph_GPIOC
+	//
+	#define UART_TXRX_PORT       GPIOD
+	#define UART_CTS_PORT        GPIOD
+	#define UART_RTS_PORT        GPIOC
+	//
 	#define UART_PIN_TX     5
 	#define UART_PIN_RX     6
+	#define UART_PIN_CTS    3
+	#define UART_PIN_RTS    2
+#endif
+
+// Alternate Pinout 1
+// This will Disable SWIO (PD1)
+// TX        RX        CTS        RTS
+// PD0       PD1       PC3        PC2
+#ifdef UART_PINOUT_ALTERNATE_1
+	#define UART_AFIO_MASK       ((uint32_t)0x04000004)
+	//
+	#define UART_TXRX_PORT_RCC   RCC_APB2Periph_GPIOD
+	#define UART_CTS_PORT_RCC    RCC_APB2Periph_GPIOC
+	#define UART_RTS_PORT_RCC    RCC_APB2Periph_GPIOC
+	//
+	#define UART_TXRX_PORT       GPIOD
+	#define UART_CTS_PORT        GPIOC
+	#define UART_RTS_PORT        GPIOC
+	//
+	#define UART_PIN_TX     0
+	#define UART_PIN_RX     1
+	#define UART_PIN_CTS    3
+	#define UART_PIN_RTS    2
+#endif
+
+// Alternate Pinout 2
+// TX        RX        CTS        RTS
+// PD6       PD5       PC6        PC7
+#ifdef UART_PINOUT_ALTERNATE_2
+	#define UART_AFIO_MASK       ((uint32_t)0x00200000)
+	//
+	#define UART_TXRX_PORT_RCC   RCC_APB2Periph_GPIOD
+	#define UART_CTS_PORT_RCC    RCC_APB2Periph_GPIOC
+	#define UART_RTS_PORT_RCC    RCC_APB2Periph_GPIOC
+	//
+	#define UART_TXRX_PORT       GPIOD
+	#define UART_CTS_PORT        GPIOC
+	#define UART_RTS_PORT        GPIOC
+	//
+	#define UART_PIN_TX     6
+	#define UART_PIN_RX     5
+	#define UART_PIN_CTS    6
+	#define UART_PIN_RTS    7
+#endif
+
+// Alternate Pinout 3
+// TX        RX        CTS        RTS
+// PC0       PC1       PC6        PC7
+#ifdef UART_PINOUT_ALTERNATE_3
+	#define UART_AFIO_MASK       ((uint32_t)0x00200004)
+	//
+	#define UART_TXRX_PORT_RCC   RCC_APB2Periph_GPIOC
+	#define UART_CTS_PORT_RCC    RCC_APB2Periph_GPIOC
+	#define UART_RTS_PORT_RCC    RCC_APB2Periph_GPIOC
+	//
+	#define UART_TXRX_PORT       GPIOC
+	#define UART_CTS_PORT        GPIOC
+	#define UART_RTS_PORT        GPIOC
+	//
+	#define UART_PIN_TX     0
+	#define UART_PIN_RX     1
+	#define UART_PIN_CTS    6
+	#define UART_PIN_RTS    7
 #endif
 
 

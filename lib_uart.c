@@ -96,16 +96,20 @@ uart_err_t uart_init( const uint8_t *rx_buffer_ptr,
 	// Enable UART1 Clock
 	RCC->APB2PCENR |= RCC_APB2Periph_USART1;
 	// Enable the UART GPIO Port, and the Alternate Function IO Flag
-	RCC->APB2PCENR |= UART_PORT_RCC | RCC_APB2Periph_AFIO;
+	RCC->APB2PCENR |= UART_TXRX_PORT_RCC | RCC_APB2Periph_AFIO;
+
+	// Reset, then set the AFIO Register depending on UART_PINOUT selected
+	AFIO->PCFR1 &= UART_AFIO_RESET_MASK;
+	AFIO->PCFR1 |= UART_AFIO_MASK;
 
 	// TODO: RTS CTS pins if set
 	// Set up the GPIO Pins for UART
 	// TX 10MHz PP AF
 	// RX INPUT_FLOATING
-	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_TX));
-	UART_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4 * UART_PIN_TX);	
-	UART_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_RX));
-	UART_PORT->CFGLR |= GPIO_CNF_IN_FLOATING << (4 * UART_PIN_RX);
+	UART_TXRX_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_TX));
+	UART_TXRX_PORT->CFGLR |= (GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF) << (4 * UART_PIN_TX);	
+	UART_TXRX_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_RX));
+	UART_TXRX_PORT->CFGLR |= GPIO_CNF_IN_FLOATING << (4 * UART_PIN_RX);
 
 	// Set CTLR1 Register (Enable RX & TX, set Worhummusd Length and Parity)
 	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | conf->wordlength | conf->parity;
