@@ -3,7 +3,7 @@ TOOLKIT_DIR  := ../toolkit
 EXTRALIB_DIR := $(TOOLKIT_DIR)/extralibs
 
 # Project name
-TARGET := uarttest
+TARGET := uart_test
 
 LIB_SRC := ../lib_uart.c
 

@@ -2,25 +2,21 @@
 * UART Library Tester program
 * lib_uart is under the MIT License. See LICENSE for more information
 *
-* ADBeta (c)	18 Sep 2024
+* ADBeta (c)	22 Sep 2024    v2
 ******************************************************************************/
 #include "ch32v003fun.h"
 #include "lib_uart.h"
-#include <string.h>
 #include <stdio.h>
 
-#define UART_BUFFER_SIZE 16
+// UART Ring Buffer, change size if needed
+#define UART_BUFFER_SIZE 32
+uint8_t ring_buffer[UART_BUFFER_SIZE];
 
-// The UART RX Ring Buffer (Must be > 0. Must be a Power of 2)
-uint8_t buff[UART_BUFFER_SIZE] = {0};
-uint8_t uart_rx_buffer[UART_BUFFER_SIZE] = {0x00};
-
-int main()
+int main(void)
 {
 	SystemInit();
 
-	Delay_Ms(1000);
-
+	// Create a UART Configuration 
 	uart_config_t uart_conf = {
 		.baudrate    = UART_BAUD_115200,
 		.wordlength  = UART_WORDLENGTH_8,
@@ -29,28 +25,31 @@ int main()
 		.flowctrl    = UART_FLOWCTRL_NONE,
 	};
 
-	// Init the UART system. See `lib_uart.h` for baud, and other config vars
-	uart_init(
-		uart_rx_buffer,
-		UART_BUFFER_SIZE,
-		&uart_conf
-	);
+	uart_err_t err_state;
 
-	// Simple string printing example
+	// Initialise the UART
+	err_state = uart_init(ring_buffer, UART_BUFFER_SIZE, &uart_conf );
+	if(err_state != UART_OK)
+	{
+		printf("Failed to Initialise the UART\n");
+		return 1;
+	}
+	
+	// Simple string printing example - all return uart_err_t error codes
 	uart_print("This string will be one line 1");
 	uart_println(" -- This string will be on the same line");
 	uart_println("This string will be on its own line");
 
+	// Loop forever, echoing UART data back to the sender
 	while(1)
 	{
-		// Clear the read buffer
-		memset(buff, 0x00, UART_BUFFER_SIZE);
+		// Declare an array as filled with 0x00.
+		uint8_t user_buffer[UART_BUFFER_SIZE] = {0x00};
 
-		// Read up to 128 bytes into the UART Buffer.
-		// Returns the number of bytes actualy read
-		size_t bytes_read = uart_read(buff, UART_BUFFER_SIZE);
+		// Read maximum [UART_BUFFER_SIZE] bytes from the ring buffer, into
+		// the user buffer. Returns the number of bytes actualy read
+		size_t bytes_read = uart_read(user_buffer, UART_BUFFER_SIZE);
 
-		
 		// Only print/modify data if there was some read
 		if(bytes_read != 0)
 		{
@@ -59,16 +58,17 @@ int main()
 			// type normally and have newlines
 			for(uint8_t chr = 0; chr < UART_BUFFER_SIZE - 1; chr++)
 			{
-				if(buff[chr] == '\r')
+				if(user_buffer[chr] == '\r')
 				{
-					buff[chr + 1] = '\n';
+					user_buffer[chr + 1] = '\n';
 					bytes_read++;
 				}
 			}
 
 			// Write the number of bytes read to the UART
-			uart_write((uint8_t *)buff, bytes_read);
+			uart_write(user_buffer, bytes_read);
 		}
 	}
 	
+	return 0;
 }
