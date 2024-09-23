@@ -4,7 +4,7 @@
 * See GitHub for more information: 
 * https://github.com/ADBeta/CH32V003_lib_uart
 * 
-* 22 Sep 2024    Version 5.2
+* 23 Sep 2024    Version 5.3
 *
 * Released under the MIT Licence
 * Copyright ADBeta (c) 2024
@@ -56,6 +56,16 @@ Alternate 3   PC0       PC1       PC6        PC7
 #define UART_PINOUT_ALTERNATE_2
 #define UART_PINOUT_ALTERNATE_3
 */
+
+/*** Macro Functions *********************************************************/
+// DIV  = round( (HCLK / (16 * BAUD)) * 16 )
+// Simplify equation and add Divisor/2 to simulate intager rounding
+#define UART_CALC_DIV(BAUD) (((FUNCONF_SYSTEM_CORE_CLOCK) + ((BAUD) / 2)) / (BAUD))
+
+// BAUD = round( (HCLK / (DIV / 16)) / 16 )
+// Simplify equation and add Divisor/2 to simulate intager rounding
+#define UART_CALC_BAUD(DIV) (((FUNCONF_SYSTEM_CORE_CLOCK) + ((DIV) / 2)) / (DIV))
+
 
 /*** Typedefs and defines  ***************************************************/
 // UART AFIO Reset Mask
@@ -162,20 +172,19 @@ typedef enum {
 } uart_err_t;
 
 
-/// @brief Defines some commonly used baud rates
-/// DIV = (HCLK / (16 * BAUD)) * 16 (HCLK is 48MHz)
-typedef enum {                                // Actual    Delta %
-	UART_BAUD_921600 = ((uint16_t)0x0034),    // 923076    0.16% Fast
-	UART_BAUD_460800 = ((uint16_t)0x0068),    // 461538    0.16% Fast
-	UART_BAUD_230400 = ((uint16_t)0x00D3),    // 227488    1.27% Fast
-	UART_BAUD_115200 = ((uint16_t)0x01A1),    // 115107    0.08% Slow
-	UART_BAUD_57600  = ((uint16_t)0x0341),    // 57623     0.04% Fast
-	UART_BAUD_38400  = ((uint16_t)0x04E2),    // 38400     0.00% 
-	UART_BAUD_19200  = ((uint16_t)0x09C4),    // 19200     0.00%
-	UART_BAUD_9600   = ((uint16_t)0x1388),    // 9600      0.00%
-	UART_BAUD_4800   = ((uint16_t)0x2710),    // 4800      0.00%
-	UART_BAUD_2400   = ((uint16_t)0x4E20),    // 2400      0.00%
-	UART_BAUD_1200   = ((uint16_t)0x9C40),    // 1200      0.00%
+/// @brief Defines some commonly used baud rates 
+typedef enum {                                               // Actual    Delta %
+	UART_BAUD_921600 = ((uint16_t)UART_CALC_DIV(921600)),    // 923076    0.16% Fast
+	UART_BAUD_460800 = ((uint16_t)UART_CALC_DIV(460800)),    // 461538    0.16% Fast
+	UART_BAUD_230400 = ((uint16_t)UART_CALC_DIV(230400)),    // 230769    0.16% Fast
+	UART_BAUD_115200 = ((uint16_t)UART_CALC_DIV(115200)),    // 115107    0.08% Slow
+	UART_BAUD_57600  = ((uint16_t)UART_CALC_DIV(57600)),     // 57623     0.04% Fast
+	UART_BAUD_38400  = ((uint16_t)UART_CALC_DIV(38400)),     // 38400     0.00% 
+	UART_BAUD_19200  = ((uint16_t)UART_CALC_DIV(19200)),     // 19200     0.00%
+	UART_BAUD_9600   = ((uint16_t)UART_CALC_DIV(9600)),      // 9600      0.00%
+	UART_BAUD_4800   = ((uint16_t)UART_CALC_DIV(4800)),      // 4800      0.00%
+	UART_BAUD_2400   = ((uint16_t)UART_CALC_DIV(2400)),      // 2400      0.00%
+	UART_BAUD_1200   = ((uint16_t)UART_CALC_DIV(1200)),      // 1200      0.00%
 } uart_baudrate_t;
 
 

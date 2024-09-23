@@ -8,6 +8,7 @@
 #include "lib_uart.h"
 #include <stdio.h>
 
+
 // UART Ring Buffer, change size if needed
 #define UART_BUFFER_SIZE 32
 uint8_t ring_buffer[UART_BUFFER_SIZE];
@@ -18,7 +19,7 @@ int main(void)
 
 	// Create a UART Configuration 
 	uart_config_t uart_conf = {
-		.baudrate    = UART_BAUD_115200,
+		.baudrate    = UART_BAUD_9600,
 		.wordlength  = UART_WORDLENGTH_8,
 		.parity      = UART_PARITY_NONE,
 		.stopbits    = UART_STOPBITS_ONE,
