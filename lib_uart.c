@@ -111,7 +111,7 @@ uart_err_t uart_init( const uint8_t *rx_buffer_ptr,
 	UART_TXRX_PORT->CFGLR &= ~(0x0F << (4 * UART_PIN_RX));
 	UART_TXRX_PORT->CFGLR |= GPIO_CNF_IN_FLOATING << (4 * UART_PIN_RX);
 
-	// Set CTLR1 Register (Enable RX & TX, set Worhummusd Length and Parity)
+	// Set CTLR1 Register (Enable RX & TX, set Word Length and Parity)
 	USART1->CTLR1 = USART_Mode_Tx | USART_Mode_Rx | conf->wordlength | conf->parity;
 	// Set CTLR2 Register (Stopbits)
 	USART1->CTLR2 = conf->stopbits;
@@ -126,7 +126,7 @@ uart_err_t uart_init( const uint8_t *rx_buffer_ptr,
 	NVIC_EnableIRQ(USART1_IRQn);
 	
 	// Enable the UART
-	USART1->CTLR1 |= CTLR1_UE_Set;
+	USART1->CTLR1 |= USART_CTLR1_UE;
 
 	// Set ok flag and return OK
 	_uart_init_ok = true;
