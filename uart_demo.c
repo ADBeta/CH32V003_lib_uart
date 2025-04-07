@@ -2,9 +2,9 @@
 * UART Library Tester program
 * lib_uart is under the MIT License. See LICENSE for more information
 *
-* ADBeta (c)	22 Sep 2024    v2
+* ADBeta (c)	07 Apr 2025    v2.1
 ******************************************************************************/
-#include "ch32v003fun.h"
+#include "ch32fun.h"
 #include "lib_uart.h"
 #include <stdio.h>
 

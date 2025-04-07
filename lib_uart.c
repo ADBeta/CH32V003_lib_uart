@@ -5,7 +5,7 @@
 * https://github.com/ADBeta/CH32V003_lib_uart
 * 
 * Released under the MIT Licence
-* Copyright ADBeta (c) 2024
+* Copyright ADBeta (c) 2024-2025
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to
@@ -26,7 +26,7 @@
 ******************************************************************************/
 #include "lib_uart.h"
 
-#include "ch32v003fun.h"
+#include "ch32fun.h"
 #include <stddef.h>
 #include <stdbool.h>
 

@@ -4,10 +4,10 @@
 * See GitHub for more information: 
 * https://github.com/ADBeta/CH32V003_lib_uart
 * 
-* 23 Sep 2024    Version 5.3
+* 07 Apr 2025    Version 5.4
 *
 * Released under the MIT Licence
-* Copyright ADBeta (c) 2024
+* Copyright ADBeta (c) 2024-2025
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to
@@ -29,7 +29,7 @@
 #ifndef LIB_UART_H
 #define LIB_UART_H
 
-#include "ch32v003fun.h"
+#include "ch32fun.h"
 #include <stddef.h>
 #include <stdbool.h>
 
